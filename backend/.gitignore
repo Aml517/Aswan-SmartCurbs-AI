@@ -1,0 +1,47 @@
+# ======================
+# Environment Variables
+# ======================
+# NEVER commit your real credentials
+.env
+
+# ======================
+# Python Virtual Environment
+# ======================
+.venv/
+venv/
+env/
+
+# ======================
+# Python Cache Files
+# ======================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# ======================
+# Distribution / Build
+# ======================
+dist/
+build/
+*.egg-info/
+
+# ======================
+# IDE & Editor Files
+# ======================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ======================
+# OS Files
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# Logs
+# ======================
+*.log
