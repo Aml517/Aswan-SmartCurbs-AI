@@ -1,3 +1,5 @@
+from pdb import main
+
 import cv2
 import json
 import numpy as np
@@ -101,3 +103,7 @@ print("\n================================")
 print("Occupancy tracking finished!")
 print("Output saved to:", OUTPUT_PATH)
 print("================================")
+
+
+if __name__ == "__main__":
+    main()
