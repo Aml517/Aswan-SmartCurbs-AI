@@ -1,0 +1,15 @@
+.zones-summary {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-5);
+}
+
+.zones-summary strong {
+  color: var(--color-success-600);
+  font-family: var(--font-display);
+}
+
+.zones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-5);
+}
