@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Reservations - Aswan Smart Curbs</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary": "#031635",
+                        "on-tertiary-container": "#8593ab",
+                        "surface-container": "#eceef0",
+                        "error-container": "#ffdad6",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#4e5e81",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed": "#0d1c2f",
+                        "surface-variant": "#e0e3e5",
+                        "on-primary-fixed": "#081b3a",
+                        "on-tertiary-fixed-variant": "#3a485c",
+                        "surface-container-low": "#f2f4f6",
+                        "error": "#ba1a1a",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#2d3133",
+                        "tertiary": "#08172a",
+                        "on-primary-fixed-variant": "#364768",
+                        "outline-variant": "#c5c6cf",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#b9c7e0",
+                        "on-surface": "#191c1e",
+                        "surface": "#f7f9fb",
+                        "inverse-primary": "#b6c6ef",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container-high": "#e6e8ea",
+                        "secondary-container": "#86f2e4",
+                        "tertiary-fixed": "#d5e3fd",
+                        "primary-fixed-dim": "#b6c6ef",
+                        "primary-container": "#1a2b4b",
+                        "secondary-fixed": "#89f5e7",
+                        "outline": "#75777f",
+                        "tertiary-container": "#1e2c3f",
+                        "on-secondary-container": "#006f66",
+                        "on-tertiary": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-surface-variant": "#44474e",
+                        "surface-dim": "#d8dadc",
+                        "surface-bright": "#f7f9fb",
+                        "on-secondary-fixed": "#00201d",
+                        "surface-container-highest": "#e0e3e5",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "inverse-on-surface": "#eff1f3",
+                        "secondary": "#006a61",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-primary-container": "#8293b8",
+                        "background": "#f7f9fb",
+                        "surface-container-lowest": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "8px",
+                        "lg": "24px",
+                        "md": "16px",
+                        "margin-mobile": "16px",
+                        "gutter": "20px",
+                        "sm": "12px",
+                        "margin-desktop": "40px",
+                        "xl": "32px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "mono-data": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "mono-data": ["14px", { "lineHeight": "20px", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #f7f9fb;
+            font-family: 'Inter', sans-serif;
+            color: #191c1e;
+        }
+        .soft-elevation {
+            box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen font-body-md text-body-md">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-lowest dark:bg-primary-container text-primary dark:text-primary-fixed font-body-md text-body-md fixed left-0 top-0 h-full w-[280px] border-r border-outline-variant dark:border-outline shadow-sm flex flex-col h-full py-lg z-50">
+<div class="px-lg pb-lg mb-md border-b border-outline-variant dark:border-outline">
+<div class="flex items-center gap-sm">
+<img alt="Aswan Municipality Logo" class="w-10 h-10 rounded object-contain" data-alt="A clean, modern geometric logo representing a smart city or municipality, primarily in navy blue and teal colors. The design is authoritative and civic, suitable for a dashboard header in a light mode UI. High quality, vector style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx1CHS3pkt8skGcf5tsDboHfqiaAQYPVhBKDzAvzvV1L4X-XEdzUPNYMBwFraHEkuRG_WrUX4atNOw1GNKAygl53bAjXcCnqxwh_s_9gOZkesmz5ptmHJlRTaxpfTxB7MJSVp_zvdgJZvb4laCrPRx844nZG7q6awT0wnKu5K1gsfo5lfVH87eBvO60ISyuUz44FsBxEmrm76vNCViEg0oOMVEFN7Y-_CJFk6K90B-0cnyazPRLBNv6A"/>
+<div>
+<h1 class="font-title-sm text-title-sm font-bold text-primary dark:text-primary-fixed">Aswan Smart Curbs</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Municipal Authority</p>
+</div>
+</div>
+</div>
+<ul class="flex-1 overflow-y-auto px-md space-y-xs">
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container dark:hover:bg-tertiary-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container dark:hover:bg-tertiary-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">location_on</span>
+<span>Parking Zones</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded text-primary dark:text-secondary-fixed font-bold border-r-4 border-secondary bg-surface-container-low dark:bg-tertiary-container hover:bg-surface-container dark:hover:bg-tertiary-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">event_available</span>
+<span>Reservations</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-md px-md py-sm rounded text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container dark:hover:bg-tertiary-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span>Settings</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto px-md pt-md">
+<a class="flex items-center gap-md px-md py-sm rounded text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container dark:hover:bg-tertiary-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</nav>
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-background text-primary dark:text-primary-fixed font-headline-md text-headline-md fixed top-0 right-0 w-[calc(100%-280px)] h-16 border-b border-outline-variant dark:border-outline flat no shadows flex justify-between items-center px-margin-desktop ml-[280px] z-40">
+<div class="flex items-center">
+<h2 class="font-headline-md text-headline-md font-semibold text-primary dark:text-primary-fixed">Municipality Dashboard</h2>
+</div>
+<div class="flex items-center gap-lg">
+<div class="relative focus-within:ring-2 focus-within:ring-secondary rounded-full bg-surface-container-low dark:bg-surface-container-highest px-sm py-xs flex items-center">
+<span class="material-symbols-outlined text-on-surface-variant mr-xs" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="bg-transparent border-none focus:ring-0 font-body-sm text-body-sm text-on-surface w-48 placeholder-on-surface-variant" placeholder="Search..." type="text"/>
+</div>
+<button class="p-xs text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container-high dark:hover:bg-tertiary-container rounded-full transition-colors focus-within:ring-2 focus-within:ring-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<img alt="Admin Profile" class="w-8 h-8 rounded-full border border-outline-variant object-cover cursor-pointer" data-alt="A small, circular profile picture of an administrator. The image shows a professional adult looking at the camera, set against a light, modern corporate background suitable for a civic tech dashboard." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF5whfx61Nx2dJE7Qzscm_FHgz5YfSSrWTIbNXx1jnwW7R9RfGz6qlN4hp_dk8qUd60cKgpgTLZOkk28Gpj-p4lS8VXvQi3Wl0G6RSZyzYFh8qJJLvfgLbOZLUwpWZGc-DN2aR-m45X6mvPa_0biWp_7VDAfm1mkH3hUEk7WUgBA-XNy5gS1pIzIQwKGjgyPuZ0Vld3_PXBCuGyi5-mW51srLuqbjs8TfNVMyH7-2TbPBuCd4pECokJQ"/>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-[280px] mt-16 p-margin-desktop min-h-[calc(100vh-64px)] bg-background">
+<!-- Page Header -->
+<div class="mb-lg">
+<h1 class="font-display-lg text-display-lg text-primary mb-base">Reservations</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Monitor and manage parking reservations.</p>
+</div>
+<!-- Summary Cards Bento Grid -->
+<div class="grid grid-cols-12 gap-gutter mb-xl">
+<!-- Total -->
+<div class="col-span-12 md:col-span-4 lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-lg p-md soft-elevation flex flex-col justify-between h-32">
+<h3 class="font-title-sm text-title-sm text-on-surface-variant">Total Reservations</h3>
+<div class="flex items-end justify-between">
+<span class="font-display-lg text-display-lg text-primary">156</span>
+<span class="material-symbols-outlined text-primary opacity-50 mb-xs" style="font-variation-settings: 'FILL' 0;">receipt_long</span>
+</div>
+</div>
+<!-- Confirmed -->
+<div class="col-span-12 md:col-span-4 lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-lg p-md soft-elevation flex flex-col justify-between h-32">
+<h3 class="font-title-sm text-title-sm text-on-surface-variant">Confirmed</h3>
+<div class="flex items-end justify-between">
+<span class="font-display-lg text-display-lg text-secondary">98</span>
+<span class="material-symbols-outlined text-secondary opacity-50 mb-xs" style="font-variation-settings: 'FILL' 0;">check_circle</span>
+</div>
+</div>
+<!-- Pending -->
+<div class="col-span-12 md:col-span-4 lg:col-span-2 bg-surface-container-lowest border border-outline-variant rounded-lg p-md soft-elevation flex flex-col justify-between h-32">
+<h3 class="font-title-sm text-title-sm text-on-surface-variant">Pending</h3>
+<div class="flex items-end justify-between">
+<span class="font-display-lg text-display-lg text-on-primary-fixed-variant">24</span>
+<span class="material-symbols-outlined text-on-primary-fixed-variant opacity-50 mb-xs" style="font-variation-settings: 'FILL' 0;">pending_actions</span>
+</div>
+</div>
+<!-- Completed -->
+<div class="col-span-12 md:col-span-6 lg:col-span-3 bg-surface-container-lowest border border-outline-variant rounded-lg p-md soft-elevation flex flex-col justify-between h-32 relative overflow-hidden">
+<div class="absolute right-0 bottom-0 opacity-10">
+<span class="material-symbols-outlined text-[100px]" style="font-variation-settings: 'FILL' 1;">task_alt</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-on-surface-variant relative z-10">Completed</h3>
+<div class="flex items-end justify-between relative z-10">
+<span class="font-display-lg text-display-lg text-primary">28</span>
+</div>
+</div>
+<!-- Cancelled -->
+<div class="col-span-12 md:col-span-6 lg:col-span-3 bg-surface-container-lowest border border-outline-variant rounded-lg p-md soft-elevation flex flex-col justify-between h-32 relative overflow-hidden">
+<div class="absolute right-0 bottom-0 opacity-10">
+<span class="material-symbols-outlined text-[100px] text-error" style="font-variation-settings: 'FILL' 1;">cancel</span>
+</div>
+<h3 class="font-title-sm text-title-sm text-error relative z-10">Cancelled</h3>
+<div class="flex items-end justify-between relative z-10">
+<span class="font-display-lg text-display-lg text-error">6</span>
+</div>
+</div>
+</div>
+<!-- Main Content Area: Data Table & Filters -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg soft-elevation overflow-hidden">
+<!-- Toolbar / Filters -->
+<div class="p-md border-b border-surface-variant flex flex-wrap items-center justify-between gap-md bg-surface-bright">
+<div class="flex flex-wrap items-center gap-sm flex-1">
+<!-- Search inside table context -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="pl-xl pr-sm py-xs bg-surface border border-outline-variant rounded text-body-sm font-body-sm focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none w-64 transition-all" placeholder="Search Reservations..." type="text"/>
+</div>
+<!-- Filter: Status -->
+<select class="py-xs pl-sm pr-lg bg-surface border border-outline-variant rounded text-body-sm font-body-sm focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none">
+<option value="">All Statuses</option>
+<option value="confirmed">Confirmed</option>
+<option value="pending">Pending</option>
+<option value="completed">Completed</option>
+<option value="cancelled">Cancelled</option>
+</select>
+<!-- Filter: Zone -->
+<select class="py-xs pl-sm pr-lg bg-surface border border-outline-variant rounded text-body-sm font-body-sm focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none">
+<option value="">All Zones</option>
+<option value="zone-a">Zone A</option>
+<option value="zone-b">Zone B</option>
+</select>
+<!-- Filter: Date -->
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">calendar_today</span>
+<input class="pl-xl pr-sm py-xs bg-surface border border-outline-variant rounded text-body-sm font-body-sm focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none text-on-surface-variant" type="date"/>
+</div>
+</div>
+<div class="flex gap-sm">
+<button class="flex items-center gap-xs px-md py-xs bg-surface border border-secondary text-secondary rounded font-body-sm text-body-sm font-medium hover:bg-secondary-container transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">download</span>
+                        Export
+                    </button>
+<button class="flex items-center gap-xs px-md py-xs bg-primary text-on-primary rounded font-body-sm text-body-sm font-medium hover:bg-primary-fixed-variant transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+                        New Reservation
+                    </button>
+</div>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-surface-variant font-label-caps text-label-caps text-primary uppercase tracking-wider">
+<tr>
+<th class="py-sm px-md font-semibold">Reservation ID</th>
+<th class="py-sm px-md font-semibold">User</th>
+<th class="py-sm px-md font-semibold">Vehicle</th>
+<th class="py-sm px-md font-semibold">Parking Zone</th>
+<th class="py-sm px-md font-semibold">Date</th>
+<th class="py-sm px-md font-semibold">Time (Start - End)</th>
+<th class="py-sm px-md font-semibold">Status</th>
+<th class="py-sm px-md font-semibold text-right">Action</th>
+</tr>
+</thead>
+<tbody class="font-mono-data text-mono-data text-on-surface divide-y divide-surface-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-lowest transition-colors cursor-pointer group" onclick="document.getElementById('modal-res-001').classList.remove('hidden')">
+<td class="py-sm px-md text-primary font-semibold">RES-001</td>
+<td class="py-sm px-md">Ahmed Ali</td>
+<td class="py-sm px-md text-on-surface-variant">Car — ABC 123</td>
+<td class="py-sm px-md">Zone A</td>
+<td class="py-sm px-md">20 Aug 2026</td>
+<td class="py-sm px-md">10:30 AM - 12:00 PM</td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-secondary/10 text-secondary font-label-caps text-label-caps font-bold">
+                                    Confirmed
+                                </span>
+</td>
+<td class="py-sm px-md text-right">
+<button class="text-secondary hover:text-secondary-fixed-dim font-body-sm text-body-sm font-medium transition-colors">Details</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-lowest transition-colors cursor-pointer group">
+<td class="py-sm px-md text-primary font-semibold">RES-004</td>
+<td class="py-sm px-md">Sara Khaled</td>
+<td class="py-sm px-md text-on-surface-variant">SUV — XYZ 789</td>
+<td class="py-sm px-md">Zone B</td>
+<td class="py-sm px-md">20 Aug 2026</td>
+<td class="py-sm px-md">02:00 PM - 04:30 PM</td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-surface-tint/10 text-surface-tint font-label-caps text-label-caps font-bold">
+                                    Pending
+                                </span>
+</td>
+<td class="py-sm px-md text-right">
+<button class="text-secondary hover:text-secondary-fixed-dim font-body-sm text-body-sm font-medium transition-colors">Details</button>
+</td>
+</tr>
+<!-- Dummy Row 3 for visual weight -->
+<tr class="hover:bg-surface-container-lowest transition-colors cursor-pointer group">
+<td class="py-sm px-md text-primary font-semibold">RES-012</td>
+<td class="py-sm px-md">Youssef Ibrahim</td>
+<td class="py-sm px-md text-on-surface-variant">Van — LMN 456</td>
+<td class="py-sm px-md">Zone A</td>
+<td class="py-sm px-md">21 Aug 2026</td>
+<td class="py-sm px-md">09:00 AM - 05:00 PM</td>
+<td class="py-sm px-md">
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-primary/10 text-primary font-label-caps text-label-caps font-bold">
+                                    Completed
+                                </span>
+</td>
+<td class="py-sm px-md text-right">
+<button class="text-secondary hover:text-secondary-fixed-dim font-body-sm text-body-sm font-medium transition-colors">Details</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="p-md border-t border-surface-variant flex items-center justify-between bg-surface-bright">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Showing 1-3 of 156 reservations</span>
+<div class="flex gap-xs">
+<button class="p-xs text-on-surface-variant hover:bg-surface-container rounded transition-colors disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:bg-surface-container rounded transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Modal: Detailed View for RES-001 -->
+<div class="fixed inset-0 z-50 hidden bg-primary/50 backdrop-blur-sm flex items-center justify-center p-margin-desktop" id="modal-res-001">
+<div class="bg-surface-container-lowest rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden border border-outline-variant flex flex-col max-h-full">
+<!-- Modal Header -->
+<div class="px-lg py-md border-b border-surface-variant flex items-center justify-between bg-surface-bright">
+<div>
+<h2 class="font-headline-md text-headline-md text-primary font-semibold flex items-center gap-sm">
+                        Reservation Details
+                        <span class="inline-flex items-center px-2 py-1 rounded bg-secondary/10 text-secondary font-label-caps text-label-caps font-bold ml-sm tracking-normal">Confirmed</span>
+</h2>
+<p class="font-mono-data text-mono-data text-on-surface-variant mt-xs">ID: RES-001</p>
+</div>
+<button class="p-xs text-on-surface-variant hover:bg-surface-container rounded-full transition-colors" onclick="document.getElementById('modal-res-001').classList.add('hidden')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Body (Bento Style Info) -->
+<div class="p-lg overflow-y-auto bg-surface-container-low flex-1">
+<div class="grid grid-cols-2 gap-md">
+<!-- User Info Card -->
+<div class="col-span-2 md:col-span-1 bg-surface-container-lowest p-md rounded-lg border border-outline-variant soft-elevation">
+<div class="flex items-center gap-sm mb-sm text-on-surface-variant border-b border-surface-variant pb-xs">
+<span class="material-symbols-outlined text-sm">person</span>
+<h3 class="font-title-sm text-title-sm">User Information</h3>
+</div>
+<p class="font-body-md text-body-md font-medium text-primary mb-xs">Ahmed Ali</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-xs">ahmed.ali@example.com</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">+20 123 456 7890</p>
+</div>
+<!-- Vehicle Info Card -->
+<div class="col-span-2 md:col-span-1 bg-surface-container-lowest p-md rounded-lg border border-outline-variant soft-elevation">
+<div class="flex items-center gap-sm mb-sm text-on-surface-variant border-b border-surface-variant pb-xs">
+<span class="material-symbols-outlined text-sm">directions_car</span>
+<h3 class="font-title-sm text-title-sm">Vehicle Details</h3>
+</div>
+<p class="font-body-md text-body-md font-medium text-primary mb-xs">Car — Sedan</p>
+<div class="inline-flex px-2 py-1 bg-surface-container border border-outline-variant rounded font-mono-data text-mono-data text-primary mt-xs">
+                            ABC 123
+                        </div>
+</div>
+<!-- Booking Details Card -->
+<div class="col-span-2 bg-surface-container-lowest p-md rounded-lg border border-outline-variant soft-elevation">
+<div class="flex items-center gap-sm mb-md text-on-surface-variant border-b border-surface-variant pb-xs">
+<span class="material-symbols-outlined text-sm">map</span>
+<h3 class="font-title-sm text-title-sm">Booking Specifics</h3>
+</div>
+<div class="grid grid-cols-3 gap-md">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-xs">Parking Zone</p>
+<p class="font-body-md text-body-md font-medium text-primary">Zone A</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Downtown Sector</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-xs">Date</p>
+<p class="font-body-md text-body-md font-medium text-primary">20 Aug 2026</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Thursday</p>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-xs">Time Window</p>
+<p class="font-body-md text-body-md font-medium text-primary">10:30 AM - 12:00 PM</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Duration: 1.5 hrs</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Footer (Actions) -->
+<div class="px-lg py-md border-t border-surface-variant bg-surface-bright flex items-center justify-end gap-sm">
+<button class="px-md py-sm bg-surface border border-error text-error rounded font-body-sm text-body-sm font-medium hover:bg-error-container transition-colors shadow-sm">
+                    Cancel Reservation
+                </button>
+<button class="px-md py-sm bg-primary text-on-primary rounded font-body-sm text-body-sm font-medium hover:bg-primary-fixed-variant transition-colors shadow-sm opacity-50 cursor-not-allowed" disabled="">
+                    Confirm Reservation
+                </button>
+</div>
+</div>
+</div>
+</body></html>
