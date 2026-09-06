@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aswan Smart Curbs - Parking Zones</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "primary": "#031635",
+                    "on-tertiary-container": "#8593ab",
+                    "surface-container": "#eceef0",
+                    "error-container": "#ffdad6",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#4e5e81",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed": "#0d1c2f",
+                    "surface-variant": "#e0e3e5",
+                    "on-primary-fixed": "#081b3a",
+                    "on-tertiary-fixed-variant": "#3a485c",
+                    "surface-container-low": "#f2f4f6",
+                    "error": "#ba1a1a",
+                    "on-error-container": "#93000a",
+                    "inverse-surface": "#2d3133",
+                    "tertiary": "#08172a",
+                    "on-primary-fixed-variant": "#364768",
+                    "outline-variant": "#c5c6cf",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#b9c7e0",
+                    "on-surface": "#191c1e",
+                    "surface": "#f7f9fb",
+                    "inverse-primary": "#b6c6ef",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-container-high": "#e6e8ea",
+                    "secondary-container": "#86f2e4",
+                    "tertiary-fixed": "#d5e3fd",
+                    "primary-fixed-dim": "#b6c6ef",
+                    "primary-container": "#1a2b4b",
+                    "secondary-fixed": "#89f5e7",
+                    "outline": "#75777f",
+                    "tertiary-container": "#1e2c3f",
+                    "on-secondary-container": "#006f66",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "on-surface-variant": "#44474e",
+                    "surface-dim": "#d8dadc",
+                    "surface-bright": "#f7f9fb",
+                    "on-secondary-fixed": "#00201d",
+                    "surface-container-highest": "#e0e3e5",
+                    "secondary-fixed-dim": "#6bd8cb",
+                    "inverse-on-surface": "#eff1f3",
+                    "secondary": "#006a61",
+                    "on-secondary-fixed-variant": "#005049",
+                    "on-primary-container": "#8293b8",
+                    "background": "#f7f9fb",
+                    "surface-container-lowest": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xs": "8px",
+                    "lg": "24px",
+                    "md": "16px",
+                    "margin-mobile": "16px",
+                    "gutter": "20px",
+                    "sm": "12px",
+                    "margin-desktop": "40px",
+                    "xl": "32px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Inter"],
+                    "body-md": ["Inter"],
+                    "title-sm": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "mono-data": ["Inter"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "title-sm": ["18px", {"lineHeight": "26px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "mono-data": ["14px", {"lineHeight": "20px", "fontWeight": "500"}]
+            }
+          },
+        }
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen font-body-md text-body-md overflow-x-hidden">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-full py-lg bg-surface-container-lowest dark:bg-primary-container border-r border-outline-variant dark:border-outline shadow-sm fixed left-0 top-0 w-[280px] z-20">
+<div class="px-lg mb-xl flex items-center gap-sm">
+<img alt="Aswan Municipality Logo" class="w-10 h-10 object-contain rounded-md" data-alt="A clean, modern geometric logo for a municipal authority, featuring abstract representations of roads or curbs in navy and teal on a pristine white background. Corporate and authoritative civic tech style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmn5sBnmvXdj4i2YU2qMw9qPKI0zA2ctw5DclElFQLX0utbuRrz6FZi1y09RqoWa1e620lFWqottpv-WWtqtvbpTuZUkO-Gee5P28Fszc3veSdaP_11MrhJs6gSlt-kHilVYAMg2qcChmfwY9fCCpd5S8xjoPZ0hS9SZCj-t3f7UonHdchA2HBpAB6N94dIc9gVQBvqtkjMhNHamCqZeX2zYtP2I12AsTYXyo6nDHtPkJOLx_X93a2GA"/>
+<div>
+<h1 class="font-title-sm text-title-sm font-bold text-primary dark:text-primary-fixed">Aswan Smart Curbs</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Municipal Authority</p>
+</div>
+</div>
+<div class="flex-1 px-sm space-y-xs overflow-y-auto">
+<a class="flex items-center gap-md px-sm py-sm rounded-lg text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container dark:hover:bg-tertiary-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-lg text-primary dark:text-secondary-fixed font-bold border-r-4 border-secondary bg-surface-container-lowest hover:bg-surface-container dark:hover:bg-tertiary-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="location_on" data-weight="fill" style="font-variation-settings: 'FILL' 1;">location_on</span>
+                Parking Zones
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-lg text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container dark:hover:bg-tertiary-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="event_available">event_available</span>
+                Reservations
+            </a>
+<a class="flex items-center gap-md px-sm py-sm rounded-lg text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container dark:hover:bg-tertiary-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+</div>
+<div class="mt-auto px-sm pt-md border-t border-outline-variant dark:border-outline">
+<a class="flex items-center gap-md px-sm py-sm rounded-lg text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container dark:hover:bg-tertiary-container transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Logout
+            </a>
+</div>
+</nav>
+<!-- TopNavBar -->
+<header class="hidden md:flex justify-between items-center px-margin-desktop w-full ml-[280px] fixed top-0 right-0 w-[calc(100%-280px)] h-16 bg-surface dark:bg-background border-b border-outline-variant dark:border-outline z-10">
+<div class="flex items-center gap-md w-1/3">
+<div class="relative w-full max-w-md focus-within:ring-2 focus-within:ring-secondary rounded-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-body-md focus:outline-none focus:ring-0" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<h2 class="font-headline-md text-headline-md font-semibold text-primary dark:text-primary-fixed hidden lg:block">Municipality Dashboard</h2>
+<div class="flex items-center gap-sm">
+<button class="p-2 text-on-surface-variant dark:text-on-tertiary-container hover:bg-surface-container-high dark:hover:bg-tertiary-container rounded-full transition-colors active:scale-95 duration-150 relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<img alt="Admin Profile" class="w-8 h-8 rounded-full object-cover border border-outline-variant" data-alt="A professional headshot of an administrative dashboard user, featuring neutral lighting and a clean, high-key corporate background. The subject is wearing business casual attire. Light mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAvKtdM8bffVAGN1HGD302iiusPFzAwwUt_vNKNFolFiuBR0-DHvUs6aBkzGJ1AxOfaR_diXqxBQjZkixGYfjWO9q35YPE4lqNGZV82JoixnpeaZURUnHZmqVM3993cXj9vE0MeeVtPpepn-lYaaG1UUMglp6DS0KVMgPXX0wYStlJDug01wFXZ26xooLitBYhdQHRgRhfmfMC4fw7Gx7mIJUZRaaQmMXD2vut672xLLnECSeT7uWhDg"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="md:ml-[280px] pt-24 px-margin-mobile md:px-margin-desktop pb-xl min-h-screen">
+<!-- Header Section -->
+<div class="mb-lg flex flex-col md:flex-row justify-between items-start md:items-end gap-md">
+<div>
+<h1 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-1">Parking Zones</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Monitor and manage all parking zones across Aswan.</p>
+</div>
+<div class="flex gap-sm">
+<button class="bg-surface-container-lowest border border-outline-variant text-primary font-title-sm text-title-sm px-4 py-2 rounded-lg hover:bg-surface-container transition-colors shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">download</span> Export
+                </button>
+<button class="bg-primary text-on-primary font-title-sm text-title-sm px-4 py-2 rounded-lg hover:bg-primary-container transition-colors shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]">add</span> Add Zone
+                </button>
+</div>
+</div>
+<!-- Stats Bar Bento -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-md mb-xl">
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-outline-variant shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05),0_2px_4px_-2px_rgba(15,23,42,0.05)] flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Total Zones</span>
+<div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">map</span>
+</div>
+</div>
+<span class="font-display-lg text-display-lg text-primary">12</span>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-outline-variant shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05),0_2px_4px_-2px_rgba(15,23,42,0.05)] flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Active Zones</span>
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</div>
+</div>
+<span class="font-display-lg text-display-lg text-primary">10</span>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-outline-variant shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05),0_2px_4px_-2px_rgba(15,23,42,0.05)] flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="font-body-sm text-body-sm text-on-surface-variant">High Occupancy</span>
+<div class="w-8 h-8 rounded-full bg-error-container flex items-center justify-center text-on-error-container">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+</div>
+</div>
+<span class="font-display-lg text-display-lg text-primary">2</span>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl border border-outline-variant shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05),0_2px_4px_-2px_rgba(15,23,42,0.05)] flex flex-col justify-between">
+<div class="flex justify-between items-start mb-4">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Available Spaces</span>
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-[18px]">local_parking</span>
+</div>
+</div>
+<span class="font-display-lg text-display-lg text-primary">102</span>
+</div>
+</div>
+<!-- Data Table Section -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-[0_4px_6px_-1px_rgba(15,23,42,0.05),0_2px_4px_-2px_rgba(15,23,42,0.05)] overflow-hidden">
+<!-- Toolbar -->
+<div class="p-md border-b border-outline-variant flex flex-col sm:flex-row justify-between items-center gap-sm bg-surface">
+<div class="relative w-full sm:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 bg-surface-container-lowest border border-outline-variant rounded-md font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-secondary focus:border-transparent" placeholder="Search zones..." type="text"/>
+</div>
+<div class="flex gap-xs w-full sm:w-auto">
+<select class="bg-surface-container-lowest border border-outline-variant rounded-md px-3 py-1.5 font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-secondary">
+<option>Status: All</option>
+<option>Active</option>
+<option>Inactive</option>
+</select>
+<select class="bg-surface-container-lowest border border-outline-variant rounded-md px-3 py-1.5 font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-secondary">
+<option>Occupancy: All</option>
+<option>&gt; 80%</option>
+<option>&lt; 50%</option>
+</select>
+</div>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container border-b border-outline-variant">
+<th class="py-sm px-md font-label-caps text-label-caps text-primary uppercase">Zone</th>
+<th class="py-sm px-md font-label-caps text-label-caps text-primary uppercase">Location</th>
+<th class="py-sm px-md font-label-caps text-label-caps text-primary uppercase text-right">Total Spaces</th>
+<th class="py-sm px-md font-label-caps text-label-caps text-primary uppercase text-right">Occupied</th>
+<th class="py-sm px-md font-label-caps text-label-caps text-primary uppercase text-right">Available</th>
+<th class="py-sm px-md font-label-caps text-label-caps text-primary uppercase w-48">Occupancy</th>
+<th class="py-sm px-md font-label-caps text-label-caps text-primary uppercase text-center">Status</th>
+<th class="py-sm px-md font-label-caps text-label-caps text-primary uppercase text-center">Action</th>
+</tr>
+</thead>
+<tbody class="font-mono-data text-mono-data">
+<!-- Row 1 -->
+<tr class="border-b border-outline-variant hover:bg-surface-container-low transition-colors group">
+<td class="py-md px-md text-primary font-medium">Parking Zone A</td>
+<td class="py-md px-md text-on-surface-variant">Nile Corniche</td>
+<td class="py-md px-md text-right text-on-surface-variant">20</td>
+<td class="py-md px-md text-right text-on-surface-variant">13</td>
+<td class="py-md px-md text-right text-on-surface-variant">7</td>
+<td class="py-md px-md">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 65%;"></div>
+</div>
+<span class="text-on-surface-variant text-xs w-8 text-right">65%</span>
+</div>
+</td>
+<td class="py-md px-md text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-secondary/10 text-secondary border border-secondary/20">Active</span>
+</td>
+<td class="py-md px-md text-center">
+<button class="text-secondary hover:text-primary transition-colors font-title-sm text-title-sm opacity-0 group-hover:opacity-100 focus:opacity-100 flex items-center justify-center w-full">
+                                    View <span class="material-symbols-outlined text-[16px] ml-1">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="border-b border-outline-variant hover:bg-surface-container-low transition-colors group">
+<td class="py-md px-md text-primary font-medium">Parking Zone B</td>
+<td class="py-md px-md text-on-surface-variant">Downtown Aswan</td>
+<td class="py-md px-md text-right text-on-surface-variant">20</td>
+<td class="py-md px-md text-right text-on-surface-variant">5</td>
+<td class="py-md px-md text-right text-on-surface-variant">15</td>
+<td class="py-md px-md">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 25%;"></div>
+</div>
+<span class="text-on-surface-variant text-xs w-8 text-right">25%</span>
+</div>
+</td>
+<td class="py-md px-md text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-secondary/10 text-secondary border border-secondary/20">Active</span>
+</td>
+<td class="py-md px-md text-center">
+<button class="text-secondary hover:text-primary transition-colors font-title-sm text-title-sm opacity-0 group-hover:opacity-100 focus:opacity-100 flex items-center justify-center w-full">
+                                    View <span class="material-symbols-outlined text-[16px] ml-1">chevron_right</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b border-outline-variant hover:bg-surface-container-low transition-colors group">
+<td class="py-md px-md text-primary font-medium">Parking Zone C</td>
+<td class="py-md px-md text-on-surface-variant">Aswan Station</td>
+<td class="py-md px-md text-right text-on-surface-variant">30</td>
+<td class="py-md px-md text-right text-on-surface-variant">24</td>
+<td class="py-md px-md text-right text-on-surface-variant">6</td>
+<td class="py-md px-md">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-2 bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-orange-500 rounded-full" style="width: 80%;"></div>
+</div>
+<span class="text-on-surface-variant text-xs w-8 text-right">80%</span>
+</div>
+</td>
+<td class="py-md px-md text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-orange-500/10 text-orange-700 border border-orange-500/20">High Occupancy</span>
+</td>
+<td class="py-md px-md text-center">
+<button class="text-secondary hover:text-primary transition-colors font-title-sm text-title-sm opacity-0 group-hover:opacity-100 focus:opacity-100 flex items-center justify-center w-full">
+                                    View <span class="material-symbols-outlined text-[16px] ml-1">chevron_right</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="px-md py-sm bg-surface border-t border-outline-variant flex justify-between items-center text-body-sm font-body-sm text-on-surface-variant">
+<span>Showing 1 to 3 of 12 entries</span>
+<div class="flex gap-1">
+<button class="px-2 py-1 rounded bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container disabled:opacity-50" disabled="">Prev</button>
+<button class="px-2 py-1 rounded bg-primary text-on-primary border border-primary">1</button>
+<button class="px-2 py-1 rounded bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container">2</button>
+<button class="px-2 py-1 rounded bg-surface-container-lowest border border-outline-variant text-on-surface-variant hover:bg-surface-container">Next</button>
+</div>
+</div>
+</div>
+</main>
+</body></html>
