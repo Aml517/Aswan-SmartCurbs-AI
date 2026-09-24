@@ -1,0 +1,87 @@
+{
+  "video": "data/input.mp4",
+  "annotations": [
+    {
+      "frame_number": 0,
+      "objects": [
+        {
+          "class_name": "car",
+          "bounding_box": [
+            120,
+            111,
+            265,
+            240
+          ]
+        },
+        {
+          "class_name": "car",
+          "bounding_box": [
+            182,
+            74,
+            326,
+            190
+          ]
+        }
+      ]
+    },
+    {
+      "frame_number": 150,
+      "objects": [
+        {
+          "class_name": "truck",
+          "bounding_box": [
+            445,
+            29,
+            565,
+            169
+          ]
+        }
+      ]
+    },
+    {
+      "frame_number": 300,
+      "objects": [
+        {
+          "class_name": "car",
+          "bounding_box": [
+            443,
+            52,
+            580,
+            191
+          ]
+        }
+      ]
+    },
+    {
+      "frame_number": 450,
+      "objects": []
+    },
+    {
+      "frame_number": 600,
+      "objects": [
+        {
+          "class_name": "car",
+          "bounding_box": [
+            332,
+            98,
+            475,
+            223
+          ]
+        },
+        {
+          "class_name": "car",
+          "bounding_box": [
+            535,
+            36,
+            636,
+            151
+          ]
+        }
+      ]
+    },
+    {
+      "frame_number": 740,
+      "objects": []
+    }
+  ]
+}

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dashboard - Aswan Smart Curbs</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#031635",
+                      "on-tertiary-container": "#8593ab",
+                      "surface-container": "#eceef0",
+                      "error-container": "#ffdad6",
+                      "on-primary": "#ffffff",
+                      "surface-tint": "#4e5e81",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-fixed": "#0d1c2f",
+                      "surface-variant": "#e0e3e5",
+                      "on-primary-fixed": "#081b3a",
+                      "on-tertiary-fixed-variant": "#3a485c",
+                      "surface-container-low": "#f2f4f6",
+                      "error": "#ba1a1a",
+                      "on-error-container": "#93000a",
+                      "inverse-surface": "#2d3133",
+                      "tertiary": "#08172a",
+                      "on-primary-fixed-variant": "#364768",
+                      "outline-variant": "#c5c6cf",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed-dim": "#b9c7e0",
+                      "on-surface": "#191c1e",
+                      "surface": "#f7f9fb",
+                      "inverse-primary": "#b6c6ef",
+                      "primary-fixed": "#d8e2ff",
+                      "surface-container-high": "#e6e8ea",
+                      "secondary-container": "#86f2e4",
+                      "tertiary-fixed": "#d5e3fd",
+                      "primary-fixed-dim": "#b6c6ef",
+                      "primary-container": "#1a2b4b",
+                      "secondary-fixed": "#89f5e7",
+                      "outline": "#75777f",
+                      "tertiary-container": "#1e2c3f",
+                      "on-secondary-container": "#006f66",
+                      "on-tertiary": "#ffffff",
+                      "on-background": "#191c1e",
+                      "on-surface-variant": "#44474e",
+                      "surface-dim": "#d8dadc",
+                      "surface-bright": "#f7f9fb",
+                      "on-secondary-fixed": "#00201d",
+                      "surface-container-highest": "#e0e3e5",
+                      "secondary-fixed-dim": "#6bd8cb",
+                      "inverse-on-surface": "#eff1f3",
+                      "secondary": "#006a61",
+                      "on-secondary-fixed-variant": "#005049",
+                      "on-primary-container": "#8293b8",
+                      "background": "#f7f9fb",
+                      "surface-container-lowest": "#ffffff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xs": "8px",
+                      "lg": "24px",
+                      "md": "16px",
+                      "margin-mobile": "16px",
+                      "gutter": "20px",
+                      "sm": "12px",
+                      "margin-desktop": "40px",
+                      "xl": "32px",
+                      "base": "4px"
+              },
+              "fontFamily": {
+                      "display-lg-mobile": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "title-sm": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "mono-data": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "title-sm": [
+                              "18px",
+                              {
+                                      "lineHeight": "26px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg": [
+                              "36px",
+                              {
+                                      "lineHeight": "44px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "mono-data": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased h-screen overflow-hidden flex">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-full py-lg bg-surface-container-lowest fixed left-0 top-0 h-full w-[280px] border-r border-outline-variant shadow-sm z-50">
+<div class="px-lg mb-8 flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" data-icon="domain">domain</span>
+</div>
+<div>
+<h1 class="font-title-sm text-title-sm font-bold text-primary">Aswan Smart Curbs</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Municipal Authority</p>
+</div>
+</div>
+<ul class="flex flex-col gap-2 px-md w-full">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary font-bold border-r-4 border-secondary bg-surface-container transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Dashboard
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="location_on">location_on</span>
+                    Parking Zones
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="event_available">event_available</span>
+                    Reservations
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    Settings
+                </a>
+</li>
+</ul>
+<div class="mt-auto px-md w-full">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Logout
+            </a>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col md:ml-[280px] h-screen overflow-hidden relative">
+<!-- TopNavBar -->
+<header class="bg-surface flex justify-between items-center px-margin-desktop w-full h-16 border-b border-outline-variant z-40 fixed top-0 right-0 md:w-[calc(100%-280px)]">
+<div class="flex items-center gap-4">
+<!-- Mobile Menu Button -->
+<button class="md:hidden p-2 text-primary hover:bg-surface-container-high rounded-full transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="relative w-64 md:w-96 focus-within:ring-2 focus-within:ring-secondary rounded-lg">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg focus:outline-none focus:border-transparent font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-primary hover:bg-surface-container-high rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="Admin Profile" class="w-full h-full object-cover" data-alt="A professional headshot of a municipal administrator in a modern office setting. Bright, natural lighting, high-quality, corporate aesthetic, clear focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqqLJFrIOJO-l4p25IPCMRDWctQ6a3gAhE1bU5CFZxv47a_4GdK0ESardfrdYpe-ZZWgzn1MovJIxeGtuDKLzf2zwk_fWQj0bdi94ZBsv3uUoEROEKWuSI_xT2MdxefSBa1xvE43UqLwT_oGHKBhio1an97_MAShmVkOXX-wNA2RaEchmSfNGAF_LrvE4TFfN7LP970zrdb7mvV-nPtnfRRMDIBCtlQ8UeDUheRMDW8hzooCYi050Z2A"/>
+</div>
+</div>
+</header>
+<!-- Scrollable Canvas -->
+<main class="flex-1 overflow-y-auto p-margin-desktop mt-16 pb-24">
+<!-- Page Header -->
+<div class="mb-xl">
+<h2 class="font-headline-md text-headline-md font-semibold text-primary mb-2">Municipality Dashboard</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Smart Parking Monitoring System â€” Aswan</p>
+</div>
+<!<!-- Section 1: Summary Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter mb-xl">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-[64px]" data-icon="location_city">location_city</span>
+</div>
+<p class="font-title-sm text-title-sm text-on-surface-variant mb-4">Total Parking Zones</p>
+<p id="stat-total-zones" class="font-display-lg text-display-lg text-primary mb-2">--</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Active Parking Zones in DB</p>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-[64px]" data-icon="local_parking">local_parking</span>
+</div>
+<p class="font-title-sm text-title-sm text-on-surface-variant mb-4">Total Parking Spaces</p>
+<p id="stat-total-spaces" class="font-display-lg text-display-lg text-primary mb-2">--</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Across all zones</p>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm hover:shadow-md transition-shadow relative overflow-hidden border-b-4 border-b-error">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-[64px]" data-icon="directions_car">directions_car</span>
+</div>
+<p class="font-title-sm text-title-sm text-on-surface-variant mb-4">Occupied Spaces</p>
+<p id="stat-occupied-spaces" class="font-display-lg text-display-lg text-error mb-2">--</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Occupied + Reserved</p>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm hover:shadow-md transition-shadow relative overflow-hidden border-b-4 border-b-secondary">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-[64px]" data-icon="check_circle">check_circle</span>
+</div>
+<p class="font-title-sm text-title-sm text-on-surface-variant mb-4">Available Spaces</p>
+<p id="stat-available-spaces" class="font-display-lg text-display-lg text-secondary mb-2">--</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Currently available</p>
+</div>
+</div>
+<!-- Dashboard Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-xl">
+<!-- Section 2: Occupancy Overview (Left Column, spans 4) -->
+<div class="lg:col-span-5 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex flex-col">
+<h3 class="font-title-sm text-title-sm text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined">pie_chart</span>
+                        Parking Occupancy Overview
+                    </h3>
+<div class="flex-1 flex flex-col justify-center items-center py-8">
+<!-- Custom CSS Donut Chart Representation -->
+<div id="donut-bg" class="relative w-48 h-48 rounded-full flex items-center justify-center mb-8" style="background: conic-gradient(#ba1a1a 0% 0%, #e0e3e5 0% 100%);">
+<div class="w-40 h-40 bg-surface-container-lowest rounded-full flex flex-col items-center justify-center shadow-inner">
+<span id="donut-pct" class="font-display-lg text-display-lg text-primary">0%</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant uppercase tracking-wider">Occupied</span>
+</div>
+</div>
+<div class="w-full flex justify-between px-8">
+<div class="flex flex-col items-center">
+<div class="flex items-center gap-2 mb-1">
+<div class="w-3 h-3 rounded-full bg-error"></div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Occupied</span>
+</div>
+<span id="donut-occupied-count" class="font-title-sm text-title-sm text-primary">0</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="flex items-center gap-2 mb-1">
+<div class="w-3 h-3 rounded-full bg-secondary"></div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Available</span>
+</div>
+<span id="donut-available-count" class="font-title-sm text-title-sm text-primary">0</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Parking Zones (Right Column, spans 7) -->
+<div class="lg:col-span-7 bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-sm flex flex-col">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-title-sm text-title-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">view_list</span>
+                            Parking Zones
+                        </h3>
+<a href="../parking_zones_list/code.html" class="font-label-caps text-label-caps text-on-secondary-container bg-secondary-container px-4 py-2 rounded-full hover:bg-secondary-fixed transition-colors">
+                            VIEW ALL ZONES
+                        </a>
+</div>
+<div id="dashboard-zones-list" class="flex flex-col gap-4">
+    <div class="p-4 text-center text-sm text-gray-500">Loading zones from DB...</div>
+</div>
+</div>
+</div>
+<!-- Section 4: Recent Reservations & Detection Logs -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden mb-xl">
+<div class="flex justify-between items-center p-lg border-b border-outline-variant bg-surface-bright">
+<h3 class="font-title-sm text-title-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">sensors</span>
+                        Live AI Detection & Booking Logs
+                    </h3>
+<a href="../reservations_management/code.html" class="font-label-caps text-label-caps text-on-secondary-container bg-secondary-container px-4 py-2 rounded-full hover:bg-secondary-fixed transition-colors">
+                        VIEW RESERVATIONS
+                    </a>
+</div>
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="font-label-caps text-label-caps text-on-surface-variant py-3 px-4 uppercase">Event ID</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant py-3 px-4 uppercase">Target Space</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant py-3 px-4 uppercase">Zone</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant py-3 px-4 uppercase">Timestamp</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant py-3 px-4 uppercase">Detection / Source</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant py-3 px-4 uppercase text-right">Status</th>
+</tr>
+</thead>
+<tbody id="dashboard-recent-activity" class="font-mono-data text-mono-data">
+    <tr><td colspan="6" class="py-4 text-center text-sm text-gray-500">Loading live logs from DB...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+<script>
+const BACKEND_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+<!-- Section 4: AI Video Surveillance & Upload Workspace -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-2xl shadow-sm overflow-hidden mb-xl p-lg">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-outline-variant">
+        <div>
+            <h3 class="font-title-sm text-title-sm text-primary flex items-center gap-2 font-bold">
+                <span class="material-symbols-outlined text-teal-600">videocam</span>
+                AI Curb Surveillance & Video Analysis
+            </h3>
+            <p class="text-xs text-gray-500 mt-1">Upload traffic/curb video to run YOLO vehicle tracking, homography ground-plane centimeter distance estimation, and parking space occupancy.</p>
+        </div>
+        <div id="ai-status-indicator" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
+            <span class="w-2 h-2 rounded-full bg-gray-400"></span>
+            <span>AI Ready</span>
+        </div>
+    </div>
+
+    <!-- Upload Controls -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+        <div class="lg:col-span-5 flex flex-col justify-between p-6 bg-surface-container-low rounded-xl border border-outline-variant/60">
+            <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-primary mb-2">Upload Surveillance Video</label>
+                <div class="flex items-center justify-center w-full mb-4">
+                    <label for="video-upload-input" class="flex flex-col items-center justify-center w-full h-36 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-white hover:bg-teal-50/50 hover:border-teal-500 transition-all p-4 text-center">
+                        <span class="material-symbols-outlined text-3xl text-teal-600 mb-1">cloud_upload</span>
+                        <span id="video-file-label" class="text-xs font-semibold text-gray-700">Click to choose MP4 / AVI / MOV video</span>
+                        <span class="text-[10px] text-gray-400 mt-1">Supports HD CCTV footage & drone feeds</span>
+                        <input id="video-upload-input" type="file" accept="video/mp4,video/avi,video/quicktime" class="hidden" onchange="handleVideoFileSelect(event)" />
+                    </label>
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Select Target Parking Zone</label>
+                    <select id="video-zone-select" class="w-full bg-white border border-outline-variant rounded-lg px-3 py-2 text-xs font-medium focus:ring-2 focus:ring-secondary">
+                        <option value="1">Zone 1: Aswan Corniche Zone A</option>
+                    </select>
+                </div>
+            </div>
+
+            <button id="btn-run-ai" onclick="submitVideoForAnalysis()" class="w-full py-3 bg-primary hover:bg-teal-700 text-white rounded-xl font-bold text-xs shadow-md transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-sm">rocket_launch</span>
+                <span>Upload & Run AI Analysis</span>
+            </button>
+        </div>
+
+        <!-- Video Player & Analysis Results -->
+        <div class="lg:col-span-7 flex flex-col justify-between p-6 bg-white rounded-xl border border-outline-variant shadow-sm">
+            <div id="ai-video-container" class="w-full aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center relative mb-4">
+                <video id="ai-output-player" controls loop class="w-full h-full object-contain hidden"></video>
+                <div id="ai-video-placeholder" class="text-center p-6 text-gray-400">
+                    <span class="material-symbols-outlined text-4xl mb-2">smart_display</span>
+                    <p class="text-xs">No analysis video loaded. Upload a video to see annotated detections & distance telemetry.</p>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-surface-container-low p-3 rounded-lg border border-outline-variant/60 text-center font-mono">
+                <div>
+                    <span class="block text-[10px] text-gray-500 uppercase">Vehicles</span>
+                    <span id="ai-stat-vehicles" class="font-bold text-primary text-sm">--</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] text-gray-500 uppercase">Occupied Bays</span>
+                    <span id="ai-stat-occupied" class="font-bold text-rose-600 text-sm">--</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] text-gray-500 uppercase">Avg Dist (cm)</span>
+                    <span id="ai-stat-avg-dist" class="font-bold text-teal-700 text-sm">--</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] text-gray-500 uppercase">Min Dist (cm)</span>
+                    <span id="ai-stat-min-dist" class="font-bold text-amber-600 text-sm">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section 5: Recent Reservations & Detection Logs -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden mb-xl">
+<div class="flex justify-between items-center p-lg border-b border-outline-variant bg-surface-bright">
+<h3 class="font-title-sm text-title-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">sensors</span>
+                        Live AI Detection & Booking Logs
+                    </h3>
+<a href="../reservations_management/code.html" class="font-label-caps text-label-caps text-on-secondary-container bg-secondary-container px-4 py-2 rounded-full hover:bg-secondary-fixed transition-colors">
+                        VIEW RESERVATIONS
+                    </a>
+</div>
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="font-label-caps text-label-caps text-on-surface-variant py-3 px-4 uppercase">Event ID</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant py-3 px-4 uppercase">Target Space</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant py-3 px-4 uppercase">Zone</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant py-3 px-4 uppercase">Timestamp</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant py-3 px-4 uppercase">Detection / Source</th>
+<th class="font-label-caps text-label-caps text-on-surface-variant py-3 px-4 uppercase text-right">Status</th>
+</tr>
+</thead>
+<tbody id="dashboard-recent-activity" class="font-mono-data text-mono-data">
+    <tr><td colspan="6" class="py-4 text-center text-sm text-gray-500">Loading live logs from DB...</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+<script>
+const BACKEND_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? `http://${window.location.hostname}:8001/api/v1`
+    : 'http://localhost:8001/api/v1';
+
+let selectedVideoFile = null;
+
+function handleVideoFileSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+        selectedVideoFile = file;
+        document.getElementById('video-file-label').textContent = `Selected: ${file.name} (${(file.size / (1024*1024)).toFixed(1)} MB)`;
+    }
+}
+
+async function submitVideoForAnalysis() {
+    if (!selectedVideoFile) {
+        alert('Please choose a video file first (e.g. input.mp4).');
+        return;
+    }
+
+    const zoneId = document.getElementById('video-zone-select').value || '1';
+    const btn = document.getElementById('btn-run-ai');
+    const indicator = document.getElementById('ai-status-indicator');
+
+    const formData = new FormData();
+    formData.append('video', selectedVideoFile);
+    formData.append('zone_id', zoneId);
+    formData.append('run_sync', 'true');
+
+    try {
+        btn.disabled = true;
+        btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Analyzing video frames (YOLO + Homography)...`;
+        indicator.className = 'inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200';
+        indicator.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span> Processing Video...`;
+
+        const res = await fetch(`${BACKEND_BASE}/analysis/upload`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.detail || `HTTP ${res.status}`);
+        }
+
+        const job = await res.json();
+        indicator.className = 'inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200';
+        indicator.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Analysis Completed!`;
+
+        // Render Video & Metrics
+        displayAnalysisJob(job);
+        syncDashboardWithDB();
+    } catch (err) {
+        alert(`Analysis Error: ${err.message}`);
+        indicator.className = 'inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-800 border border-rose-200';
+        indicator.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span> Analysis Failed`;
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<span class="material-symbols-outlined text-sm">rocket_launch</span> Upload & Run AI Analysis`;
+    }
+}
+
+function displayAnalysisJob(job) {
+    if (!job) return;
+
+    const videoPlayer = document.getElementById('ai-output-player');
+    const placeholder = document.getElementById('ai-video-placeholder');
+
+    if (job.output_video_url) {
+        videoPlayer.src = `${BACKEND_BASE.replace('/api/v1', '')}${job.output_video_url}`;
+        videoPlayer.classList.remove('hidden');
+        if (placeholder) placeholder.classList.add('hidden');
+        videoPlayer.load();
+        videoPlayer.play().catch(() => {});
+    }
+
+    const elVehicles = document.getElementById('ai-stat-vehicles');
+    const elOccupied = document.getElementById('ai-stat-occupied');
+    const elAvgDist = document.getElementById('ai-stat-avg-dist');
+    const elMinDist = document.getElementById('ai-stat-min-dist');
+
+    if (elVehicles) elVehicles.textContent = job.vehicles_detected_count;
+    if (elOccupied) elOccupied.textContent = `${job.occupied_spaces_count} / ${job.occupied_spaces_count + job.available_spaces_count}`;
+    if (elAvgDist) elAvgDist.textContent = job.avg_vehicle_distance_cm ? `${job.avg_vehicle_distance_cm} cm` : '--';
+    if (elMinDist) elMinDist.textContent = job.min_vehicle_distance_cm ? `${job.min_vehicle_distance_cm} cm` : '--';
+}
+
+async function loadLatestAnalysisJob() {
+    try {
+        const res = await fetch(`${BACKEND_BASE}/analysis`);
+        if (res.ok) {
+            const jobs = await res.json();
+            if (jobs && jobs.length > 0) {
+                displayAnalysisJob(jobs[0]);
+            }
+        }
+    } catch(e) {}
+}
+
+async function syncDashboardWithDB() {
+    try {
+        const [availRes, logsRes] = await Promise.all([
+            fetch(`${BACKEND_BASE}/availability`),
+            fetch(`${BACKEND_BASE}/occupancy/logs?limit=8`)
+        ]);
+        
+        if (!availRes.ok) return;
+        const zones = await availRes.json();
+        const logs = logsRes.ok ? await logsRes.json() : [];
+
+        let totalZones = zones.length;
+        let totalSpaces = 0;
+        let availableCount = 0;
+        let occupiedCount = 0;
+        let reservedCount = 0;
+
+        zones.forEach(z => {
+            totalSpaces += (z.total_spaces || 0);
+            availableCount += (z.available_count || 0);
+            occupiedCount += (z.occupied_count || 0);
+            reservedCount += (z.reserved_count || 0);
+        });
+
+        const effectiveOccupied = occupiedCount + reservedCount;
+        const occPct = totalSpaces > 0 ? Math.round((effectiveOccupied / totalSpaces) * 100) : 0;
+
+        // 1. Update Summary Cards
+        const elTotalZones = document.getElementById('stat-total-zones');
+        const elTotalSpaces = document.getElementById('stat-total-spaces');
+        const elOccupied = document.getElementById('stat-occupied-spaces');
+        const elAvailable = document.getElementById('stat-available-spaces');
+
+        if (elTotalZones) elTotalZones.textContent = totalZones;
+        if (elTotalSpaces) elTotalSpaces.textContent = totalSpaces;
+        if (elOccupied) elOccupied.textContent = effectiveOccupied;
+        if (elAvailable) elAvailable.textContent = availableCount;
+
+        // 2. Update Donut Chart
+        const elDonutPct = document.getElementById('donut-pct');
+        const elDonutBg = document.getElementById('donut-bg');
+        const elDonutOcc = document.getElementById('donut-occupied-count');
+        const elDonutAvail = document.getElementById('donut-available-count');
+
+        if (elDonutPct) elDonutPct.textContent = `${occPct}%`;
+        if (elDonutBg) elDonutBg.style.background = `conic-gradient(#ba1a1a 0% ${occPct}%, #006a61 ${occPct}% 100%)`;
+        if (elDonutOcc) elDonutOcc.textContent = effectiveOccupied;
+        if (elDonutAvail) elDonutAvail.textContent = availableCount;
+
+        // 3. Update Zones List Feed
+        const elZonesList = document.getElementById('dashboard-zones-list');
+        if (elZonesList && zones.length > 0) {
+            elZonesList.innerHTML = '';
+            zones.forEach(z => {
+                const total = z.total_spaces || 0;
+                const occ = (z.occupied_count || 0) + (z.reserved_count || 0);
+                const pct = total > 0 ? Math.round((occ / total) * 100) : 0;
+                const isHigh = pct >= 80;
+
+                const card = document.createElement('div');
+                card.className = 'border border-outline-variant rounded-xl p-4 bg-surface hover:border-secondary transition-all cursor-pointer';
+                card.onclick = () => window.location.href = `../parking_zone_details/code.html?zone_id=${z.zone_id}`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-title-sm text-title-sm text-primary font-bold hover:text-secondary">${z.zone_name}</h4>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant">${z.location} • ${total} spaces total</p>
+                        </div>
+                        <span class="${isHigh ? 'bg-error/10 text-error' : 'bg-secondary/10 text-secondary'} font-label-caps text-label-caps px-2.5 py-1 rounded-full font-bold">
+                            ${isHigh ? 'HIGH OCCUPANCY' : 'ACTIVE'}
+                        </span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1 h-2.5 bg-surface-variant rounded-full overflow-hidden">
+                            <div class="h-full ${isHigh ? 'bg-error' : 'bg-secondary'} rounded-full transition-all duration-500" style="width: ${pct}%"></div>
+                        </div>
+                        <div class="w-28 text-right font-mono-data text-mono-data">
+                            <span class="text-primary font-bold">${occ} / ${total}</span>
+                            <span class="text-on-surface-variant ml-1">(${pct}%)</span>
+                        </div>
+                    </div>
+                `;
+                elZonesList.appendChild(card);
+            });
+        }
+
+        // 4. Update Recent Activity Feed
+        const elActivityTbody = document.getElementById('dashboard-recent-activity');
+        if (elActivityTbody && logs.length > 0) {
+            elActivityTbody.innerHTML = '';
+            logs.forEach(log => {
+                const tr = document.createElement('tr');
+                tr.className = 'border-b border-outline-variant hover:bg-surface-bright transition-colors';
+                const isOcc = log.status === 'occupied';
+                tr.innerHTML = `
+                    <td class="py-3 px-4 text-primary font-bold">#LOG-${log.id}</td>
+                    <td class="py-3 px-4 text-on-surface font-body-sm font-semibold">Space #${log.space_id}</td>
+                    <td class="py-3 px-4 text-on-surface-variant font-body-sm">Zone ${log.zone_id}</td>
+                    <td class="py-3 px-4 text-on-surface-variant text-xs">${log.created_at ? log.created_at.replace('T', ' ').substring(0, 19) : 'Live'}</td>
+                    <td class="py-3 px-4 text-secondary font-semibold text-xs">${log.source || 'AI Detection'} (${Math.round((log.confidence || 0.95) * 100)}%)</td>
+                    <td class="py-3 px-4 text-right">
+                        <span class="inline-flex items-center gap-1.5 ${isOcc ? 'bg-error/10 text-error' : 'bg-secondary/10 text-secondary'} font-label-caps text-label-caps px-2.5 py-1 rounded-full font-bold">
+                            <span class="w-1.5 h-1.5 rounded-full ${isOcc ? 'bg-error' : 'bg-secondary'}"></span>
+                            ${log.status.toUpperCase()}
+                        </span>
+                    </td>
+                `;
+                elActivityTbody.appendChild(tr);
+            });
+        }
+    } catch (e) {
+        console.warn('Dashboard DB sync error:', e);
+    }
+}
+
+// Update immediately and repeat every 1.5 seconds
+document.addEventListener('DOMContentLoaded', () => {
+    syncDashboardWithDB();
+    loadLatestAnalysisJob();
+    setInterval(syncDashboardWithDB, 1500);
+});
+</script>
+<script src="../admin-api.js"></script></body></html>

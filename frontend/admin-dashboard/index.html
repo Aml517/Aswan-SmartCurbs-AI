@@ -1,0 +1,102 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aswan Smart Curbs — Municipality Admin Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] text-[#191C1E] min-h-screen p-8">
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-10 text-center">
+            <div class="inline-flex items-center gap-3 bg-[#1A2B4B] text-white px-5 py-2.5 rounded-full mb-4 shadow-sm">
+                <span class="material-symbols-outlined text-teal-400">admin_panel_settings</span>
+                <span class="font-semibold text-sm tracking-wide">Aswan Municipal Authority</span>
+            </div>
+            <h1 class="text-4xl font-extrabold text-[#031635] tracking-tight mb-3">Smart Curbs Admin Dashboard</h1>
+            <p class="text-gray-600 max-w-2xl mx-auto">High-fidelity civic tech management interface prototypes for monitoring curb occupancy, parking zones, and real-time reservations.</p>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <!-- Screen 1: Main Dashboard -->
+            <a href="main_dashboard/code.html" class="group bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl hover:border-teal-500 transition-all duration-200 flex flex-col">
+                <div class="aspect-video bg-gray-100 overflow-hidden border-b border-gray-100 relative">
+                    <img src="main_dashboard/screen.png" alt="Main Dashboard" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <span class="absolute top-3 right-3 bg-[#1A2B4B]/80 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm font-medium">Overview</span>
+                </div>
+                <div class="p-6 flex-1 flex flex-col">
+                    <h2 class="text-xl font-bold text-[#031635] group-hover:text-teal-600 transition-colors mb-2">1. Main Analytics Dashboard</h2>
+                    <p class="text-sm text-gray-600 mb-4">City-wide curb occupancy metrics, sparklines, peak activity times, and live status breakdown.</p>
+                    <div class="mt-auto flex items-center text-teal-600 font-semibold text-sm">
+                        <span>Open Screen</span>
+                        <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Screen 2: Parking Zones List -->
+            <a href="parking_zones_list/code.html" class="group bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl hover:border-teal-500 transition-all duration-200 flex flex-col">
+                <div class="aspect-video bg-gray-100 overflow-hidden border-b border-gray-100 relative">
+                    <img src="parking_zones_list/screen.png" alt="Parking Zones List" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <span class="absolute top-3 right-3 bg-[#1A2B4B]/80 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm font-medium">Zones</span>
+                </div>
+                <div class="p-6 flex-1 flex flex-col">
+                    <h2 class="text-xl font-bold text-[#031635] group-hover:text-teal-600 transition-colors mb-2">2. Parking Zones Directory</h2>
+                    <p class="text-sm text-gray-600 mb-4">Tabular directory of all municipal parking zones, live capacity bars, pricing tiers, and occupancy thresholds.</p>
+                    <div class="mt-auto flex items-center text-teal-600 font-semibold text-sm">
+                        <span>Open Screen</span>
+                        <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Screen 3: Parking Zone Details -->
+            <a href="parking_zone_details/code.html" class="group bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl hover:border-teal-500 transition-all duration-200 flex flex-col">
+                <div class="aspect-video bg-gray-100 overflow-hidden border-b border-gray-100 relative">
+                    <img src="parking_zone_details/screen.png" alt="Parking Zone Details" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <span class="absolute top-3 right-3 bg-[#1A2B4B]/80 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm font-medium">Zone Detail</span>
+                </div>
+                <div class="p-6 flex-1 flex flex-col">
+                    <h2 class="text-xl font-bold text-[#031635] group-hover:text-teal-600 transition-colors mb-2">3. Zone Space Management & CCTV</h2>
+                    <p class="text-sm text-gray-600 mb-4">Granular parking bay grid status, live sensor/camera telemetry view, and bay-by-bay availability controls.</p>
+                    <div class="mt-auto flex items-center text-teal-600 font-semibold text-sm">
+                        <span>Open Screen</span>
+                        <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Screen 4: Reservations Management -->
+            <a href="reservations_management/code.html" class="group bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-xl hover:border-teal-500 transition-all duration-200 flex flex-col">
+                <div class="aspect-video bg-gray-100 overflow-hidden border-b border-gray-100 relative">
+                    <img src="reservations_management/screen.png" alt="Reservations Management" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    <span class="absolute top-3 right-3 bg-[#1A2B4B]/80 text-white text-xs px-3 py-1 rounded-full backdrop-blur-sm font-medium">Reservations</span>
+                </div>
+                <div class="p-6 flex-1 flex flex-col">
+                    <h2 class="text-xl font-bold text-[#031635] group-hover:text-teal-600 transition-colors mb-2">4. Reservations & Dispatch</h2>
+                    <p class="text-sm text-gray-600 mb-4">Real-time driver booking feed, active vs completed statuses, vehicle plate matching, and cancel actions.</p>
+                    <div class="mt-auto flex items-center text-teal-600 font-semibold text-sm">
+                        <span>Open Screen</span>
+                        <span class="material-symbols-outlined text-sm ml-1 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="bg-white rounded-xl border border-gray-200 p-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>
+                <h3 class="font-bold text-[#031635]">Design System Specification</h3>
+                <p class="text-sm text-gray-600">Full color tokens, typography rules, and civic UI components specification.</p>
+            </div>
+            <a href="DESIGN.md" class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-[#031635] font-semibold text-sm rounded-lg transition-colors">
+                View DESIGN.md
+            </a>
+        </div>
+    </div>
+</body>
+</html>

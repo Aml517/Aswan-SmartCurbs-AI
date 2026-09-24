@@ -1,0 +1,62 @@
+# ======================
+# Environment Variables
+# ======================
+.env
+.env.local
+.env.*.local
+
+# ======================
+# Python Virtual Environment & Cache
+# ======================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# ======================
+# Node / Frontend Build
+# ======================
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+
+# ======================
+# IDE & Editor Files
+# ======================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ======================
+# OS Files
+# ======================
+.DS_Store
+Thumbs.db
+
+# ======================
+# Database & Storage
+# ======================
+*.db
+*.sqlite
+*.sqlite3
+backend/app/media/uploads/*
+!backend/app/media/uploads/.gitkeep
+backend/app/media/processed_videos/*
+!backend/app/media/processed_videos/.gitkeep
+
+# ======================
+# Logs
+# ======================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+

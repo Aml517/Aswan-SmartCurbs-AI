@@ -1,0 +1,78 @@
+:root {
+  /* ---- Color: grounded in Aswan — granite, Nile water, desert sand, Nubian rust ---- */
+  --color-granite-900: #171d22;
+  --color-granite-800: #212a31;
+  --color-granite-700: #313d46;
+  --color-granite-500: #5c6b74;
+  --color-granite-300: #97a4ab;
+
+  --color-stone-100: #f2efe7;
+  --color-stone-50: #f8f6f0;
+  --color-white: #ffffff;
+
+  --color-nile-700: #0d5c5c;
+  --color-nile-600: #10727a;
+  --color-nile-500: #158c92;
+  --color-nile-100: #dcefee;
+
+  --color-rust-600: #a8471f;
+  --color-rust-500: #c15a2a;
+  --color-rust-100: #f6e3d6;
+
+  --color-amber-600: #b8862b;
+  --color-amber-100: #f7ecd6;
+
+  --color-success-600: #29764f;
+  --color-success-100: #dcefe4;
+
+  --color-danger-600: #a8331f;
+  --color-danger-100: #f6dfd9;
+
+  --color-border: #e2ddd0;
+  --color-border-strong: #cfc8b6;
+
+  /* ---- Semantic tokens ---- */
+  --bg-page: var(--color-stone-100);
+  --bg-surface: var(--color-white);
+  --bg-sunken: var(--color-stone-50);
+  --text-primary: var(--color-granite-900);
+  --text-secondary: var(--color-granite-500);
+  --text-inverse: var(--color-stone-50);
+  --accent: var(--color-nile-600);
+  --accent-strong: var(--color-nile-700);
+  --focus-ring: #0d5c5c;
+
+  /* ---- Type ---- */
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+
+  --text-xs: 0.8rem;
+  --text-sm: 0.9rem;
+  --text-base: 1rem;
+  --text-lg: 1.15rem;
+  --text-xl: 1.45rem;
+  --text-2xl: 1.9rem;
+  --text-3xl: 2.6rem;
+
+  /* ---- Spacing scale ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ---- Shape ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --border-width: 1px;
+
+  /* ---- Elevation (kept subtle & warm, not generic grey) ---- */
+  --shadow-sm: 0 1px 2px rgba(23, 29, 34, 0.06);
+  --shadow-md: 0 6px 20px -8px rgba(23, 29, 34, 0.22);
+
+  --max-width: 1120px;
+}
