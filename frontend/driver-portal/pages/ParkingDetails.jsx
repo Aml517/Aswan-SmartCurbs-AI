@@ -3,6 +3,8 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import EmptyState from "../components/EmptyState";
 import { getParkingZoneById, getParkingAvailability } from "../services/api";
+import useUserLocation from "../hooks/useUserLocation";
+import { formatDuration, haversineDistanceKm, formatDistance } from "../utils/parking";
 import "./ParkingDetails.css";
 
 function getZoneStatus(type, available, occupied, capacity) {
@@ -40,6 +42,7 @@ export default function ParkingDetails() {
   const [availability, setAvailability] = useState(null);
   const [status, setStatus] = useState("loading"); // loading | ready | error
   const [selectedSpaceId, setSelectedSpaceId] = useState("");
+  const { location: userLocation, status: locationStatus } = useUserLocation();
 
   useEffect(() => {
     let isMounted = true;
@@ -111,6 +114,21 @@ export default function ParkingDetails() {
   const occupancyDisplayPercent = isRestricted
     ? 100
     : availability.occupancyPercent;
+
+  const distanceKm = haversineDistanceKm(
+    userLocation?.lat,
+    userLocation?.lng,
+    zone.latitude,
+    zone.longitude
+  );
+  const distanceLabel =
+    locationStatus === "ready"
+      ? formatDistance(distanceKm) || "Distance unavailable"
+      : locationStatus === "denied"
+      ? "Enable location to see distance"
+      : locationStatus === "unsupported" || locationStatus === "error"
+      ? "Distance unavailable"
+      : "Locating…";
 
   function handleReserve() {
     if (!selectedSpaceId || isRestricted) return;
@@ -203,6 +221,14 @@ export default function ParkingDetails() {
               <div className="details-info-item">
                 <dt>Parking Rules</dt>
                 <dd>{zone.rules || "Standard municipal curb parking regulations"}</dd>
+              </div>
+              <div className="details-info-item">
+                <dt>Maximum Duration</dt>
+                <dd>{isRestricted ? "Not applicable" : formatDuration(zone.maxDurationMinutes)}</dd>
+              </div>
+              <div className="details-info-item">
+                <dt>Distance</dt>
+                <dd>{distanceLabel}</dd>
               </div>
             </div>
           </div>

@@ -5,6 +5,8 @@ import Login from "./pages/Login";
 import ParkingZones from "./pages/ParkingZones";
 import ParkingDetails from "./pages/ParkingDetails";
 import Reservation from "./pages/Reservation";
+import ParkingSession from "./pages/ParkingSession";
+import History from "./pages/History";
 
 export default function App() {
   return (
@@ -39,6 +41,22 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/session/:sessionId"
+          element={
+            <ProtectedRoute>
+              <ParkingSession />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute>
+              <History />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Unknown paths fall back to Login */}
         <Route path="*" element={<Navigate to="/login" replace />} />
@@ -46,3 +64,4 @@ export default function App() {
     </div>
   );
 }
+

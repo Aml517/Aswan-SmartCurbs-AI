@@ -1,0 +1,75 @@
+{
+  "video": "data/input.mp4",
+  "model": "yolov8n.pt",
+  "vehicle_classes": [
+    "car",
+    "truck",
+    "bus",
+    "motorcycle"
+  ],
+  "confidence": 0.35,
+  "tracker": "bytetrack.yaml",
+  "zone": {
+    "name": "Aswan Pilot Zone",
+    "max_stay_minutes": 120,
+    "overstay_demo_seconds": 60
+  },
+  "thresholds": {
+    "stationary_seconds": 2.0,
+    "stationary_px": 5.0,
+    "max_curb_distance_cm": 50.0,
+    "min_gap_cm": 30.0
+  },
+  "anpr": {
+    "enabled": false,
+    "every_n_frames": 5
+  },
+  "backend": {
+    "enabled": true,
+    "url": "http://127.0.0.1:8001/api/v1"
+  },
+  "calibration": {
+    "enabled": true,
+    "image_points": [
+      [
+        100,
+        200
+      ],
+      [
+        500,
+        200
+      ],
+      [
+        600,
+        600
+      ],
+      [
+        50,
+        600
+      ]
+    ],
+    "world_points_cm": [
+      [
+        0,
+        0
+      ],
+      [
+        1000,
+        0
+      ],
+      [
+        1000,
+        1500
+      ],
+      [
+        0,
+        1500
+      ]
+    ]
+  },
+  "restricted_areas": [],
+  "protected_access_areas": [],
+  "authorized_plates": [],
+  "enforce_configured_bays": false,
+  "parking_spaces": {}
+}

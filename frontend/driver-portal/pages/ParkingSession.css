@@ -1,0 +1,122 @@
+.session-card {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+
+.session-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.session-header h1 {
+  font-size: var(--text-2xl);
+  margin-top: var(--space-2);
+}
+
+.session-meta {
+  color: var(--text-secondary);
+  margin-top: var(--space-1);
+  font-size: var(--text-sm);
+}
+
+.pill-session-done {
+  background: var(--color-nile-100);
+  color: var(--color-nile-700);
+}
+
+.session-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-6) 0;
+  margin-bottom: var(--space-5);
+  background: var(--bg-sunken);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.session-timer-value {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--accent-strong);
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.session-timer-label {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+.session-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  padding: var(--space-5) 0;
+  margin-bottom: var(--space-5);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.session-stats dt {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.session-stats dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+.session-cost {
+  color: var(--accent-strong);
+}
+
+.session-overstay {
+  margin-bottom: var(--space-5);
+}
+
+.session-receipt {
+  margin-bottom: var(--space-6);
+}
+
+.session-receipt-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-6) 0 var(--space-5);
+}
+
+.session-receipt-total-value {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--accent-strong);
+}
+
+.session-receipt-total-label {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 560px) {
+  .session-stats {
+    grid-template-columns: 1fr;
+  }
+}

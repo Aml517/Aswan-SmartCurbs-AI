@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Loading from "../components/Loading";
 import EmptyState from "../components/EmptyState";
 import { getParkingZoneById, getParkingAvailability, createReservation } from "../services/api";
+import { recordReservation, startSession } from "../services/localHistory";
 import "./Reservation.css";
 
 function getInitialDateTime() {
@@ -216,6 +217,23 @@ export default function Reservation() {
         endTime: endIso,
       });
       setReservation(result);
+
+      // Log to the driver's local history (User Portal roadmap 4.5) —
+      // the backend has no reservation-history endpoint yet, see
+      // services/localHistory.js.
+      recordReservation({
+        reservationId: result.id,
+        zoneId: zone.id,
+        zoneName: zone.name,
+        zoneType: zone.type,
+        spaceNumber: space.number,
+        hourlyRate: zone.hourlyRate,
+        driverName: trimmedName,
+        plateNumber: trimmedPlate,
+        startTime: startIso,
+        endTime: endIso,
+        status: result.status || "active",
+      });
     } catch (err) {
       setFormError(err.message || "Reservation failed. Please try again.");
     } finally {
@@ -246,6 +264,22 @@ export default function Reservation() {
 
   if (reservation) {
     const dtInfo = formatReservationDateTime(reservation.startTime, reservation.endTime);
+    const isPaidReservation = zone.type !== "FREE";
+
+    function handleStartSession() {
+      const session = startSession({
+        reservationId: reservation.id,
+        zoneId: zone.id,
+        zoneName: zone.name,
+        zoneType: zone.type,
+        spaceNumber: space.number,
+        hourlyRate: zone.hourlyRate,
+        maxDurationMinutes: zone.maxDurationMinutes,
+        driverName: reservation.driverName,
+        plateNumber: reservation.plateNumber,
+      });
+      navigate(`/session/${session.id}`);
+    }
 
     return (
       <div className="page-container">
@@ -307,10 +341,15 @@ export default function Reservation() {
             </div>
           </dl>
           <div className="reservation-success-actions">
+            {isPaidReservation && (
+              <button type="button" className="btn btn-primary" onClick={handleStartSession}>
+                Start Parking Session ▶
+              </button>
+            )}
             <button type="button" className="btn btn-secondary" onClick={() => navigate(`/parking-zones/${zone.id}`)}>
               Back to Zone
             </button>
-            <button type="button" className="btn btn-primary" onClick={() => navigate("/parking-zones")}>
+            <button type="button" className="btn btn-secondary" onClick={() => navigate("/parking-zones")}>
               Browse Other Zones
             </button>
           </div>

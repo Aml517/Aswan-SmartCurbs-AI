@@ -37,6 +37,7 @@ export default function Navbar() {
         {!isLoginPage && (
           <nav className="navbar-links">
             <Link to="/parking-zones">Parking Zones</Link>
+            <Link to="/history">My History</Link>
             {driverName && <span className="navbar-driver">{driverName}</span>}
             <button type="button" className="navbar-logout" onClick={handleLogout}>
               Log out

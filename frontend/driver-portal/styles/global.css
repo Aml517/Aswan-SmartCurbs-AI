@@ -229,6 +229,11 @@ button {
   color: var(--color-rust-600);
 }
 
+.pill-session-done {
+  background: var(--color-granite-200);
+  color: var(--color-granite-700);
+}
+
 /* Zone Policy Type Badges */
 .pill-type-paid {
   background: var(--color-nile-100);
