@@ -652,6 +652,159 @@ window.simulateAIOccupancy = async function(zoneId) {
     }
 };
 
+// --------------------------------------------------------------------------
+// AI Video Surveillance & Space Ingestion Controller
+// --------------------------------------------------------------------------
+let selectedVideoFile = null;
+
+window.handleFileSelect = function(input) {
+    if (input.files && input.files[0]) {
+        selectedVideoFile = input.files[0];
+        const label = document.getElementById('selected-file-label');
+        if (label) {
+            label.textContent = `Selected: ${selectedVideoFile.name} (${(selectedVideoFile.size / (1024 * 1024)).toFixed(2)} MB)`;
+            label.classList.add('text-teal-700');
+        }
+    }
+};
+
+window.submitVideoAnalysis = async function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const zoneId = urlParams.get('zone_id') || '1';
+
+    if (!selectedVideoFile) {
+        alert('Please choose or drop a video file (.mp4, .avi, .mov, .mkv) first, or click "Test with Sample CCTV"!');
+        return;
+    }
+
+    await executeVideoUpload(selectedVideoFile, zoneId);
+};
+
+window.runSampleVideoQuickTest = async function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const zoneId = urlParams.get('zone_id') || '1';
+
+    const statusEl = document.getElementById('ai-processing-status');
+    const stepEl = document.getElementById('ai-status-step');
+    const progBar = document.getElementById('ai-progress-bar');
+    const resultsEl = document.getElementById('ai-results-banner');
+
+    if (resultsEl) resultsEl.classList.add('hidden');
+    if (statusEl) statusEl.classList.remove('hidden');
+    if (stepEl) stepEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span> Fetching sample CCTV recording (input.mp4)...`;
+    if (progBar) progBar.style.width = '25%';
+
+    try {
+        // Fetch sample video from assets
+        const sampleRes = await fetch('../assets/sample_cctv.mp4');
+        if (!sampleRes.ok) {
+            throw new Error(`Failed to load sample CCTV video: HTTP ${sampleRes.status}`);
+        }
+        const blob = await sampleRes.blob();
+        const sampleFile = new File([blob], "sample_cctv.mp4", { type: "video/mp4" });
+        selectedVideoFile = sampleFile;
+
+        const label = document.getElementById('selected-file-label');
+        if (label) {
+            label.textContent = `Selected: sample_cctv.mp4 (${(sampleFile.size / (1024 * 1024)).toFixed(2)} MB)`;
+            label.classList.add('text-teal-700');
+        }
+
+        await executeVideoUpload(sampleFile, zoneId);
+    } catch (err) {
+        console.error("Sample video test error:", err);
+        if (statusEl) statusEl.classList.add('hidden');
+        alert(`❌ Error loading sample video: ${err.message}`);
+    }
+};
+
+async function executeVideoUpload(file, zoneId) {
+    const statusEl = document.getElementById('ai-processing-status');
+    const stepEl = document.getElementById('ai-status-step');
+    const progBar = document.getElementById('ai-progress-bar');
+    const resultsEl = document.getElementById('ai-results-banner');
+    const btnProcess = document.getElementById('btn-process-ai');
+
+    if (resultsEl) resultsEl.classList.add('hidden');
+    if (statusEl) statusEl.classList.remove('hidden');
+    if (btnProcess) {
+        btnProcess.disabled = true;
+        btnProcess.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+
+    if (stepEl) stepEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span> Uploading video & initializing YOLOv8 AI pipeline...`;
+    if (progBar) progBar.style.width = '40%';
+
+    try {
+        const formData = new FormData();
+        formData.append('video', file);
+        formData.append('zone_id', zoneId);
+        formData.append('run_sync', 'true');
+
+        if (stepEl) stepEl.innerHTML = `<span class="w-2 h-2 rounded-full bg-teal-400 animate-ping"></span> Running YOLOv8 Vehicle Detection & Metric Homography Calculation...`;
+        if (progBar) progBar.style.width = '70%';
+
+        const response = await fetch(`${API_BASE}/analysis/upload`, {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.detail || `Upload failed with HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (progBar) progBar.style.width = '100%';
+        if (stepEl) stepEl.innerHTML = `<span class="text-emerald-400 font-bold">✓ AI Pipeline Completed! Space Occupancy Updated.</span>`;
+
+        setTimeout(() => {
+            if (statusEl) statusEl.classList.add('hidden');
+            if (resultsEl) resultsEl.classList.remove('hidden');
+
+            // Populate Results
+            const badge = document.getElementById('ai-job-badge');
+            if (badge) badge.textContent = `Job #${data.id} (${data.filename})`;
+
+            const resVehicles = document.getElementById('ai-res-vehicles');
+            if (resVehicles) resVehicles.textContent = data.vehicles_detected_count ?? 0;
+
+            const resOccupied = document.getElementById('ai-res-occupied');
+            if (resOccupied) resOccupied.textContent = data.occupied_spaces_count ?? 0;
+
+            const resAvailable = document.getElementById('ai-res-available');
+            if (resAvailable) resAvailable.textContent = data.available_spaces_count ?? 0;
+
+            const resDistance = document.getElementById('ai-res-distance');
+            if (resDistance) resDistance.textContent = data.avg_vehicle_distance_cm != null ? `${data.avg_vehicle_distance_cm} cm` : 'N/A';
+
+            const streamBtn = document.getElementById('ai-video-stream-btn');
+            if (streamBtn) {
+                if (data.output_video_url) {
+                    streamBtn.href = `${API_BASE.replace('/api/v1', '')}${data.output_video_url}`;
+                    streamBtn.classList.remove('hidden');
+                } else {
+                    streamBtn.classList.add('hidden');
+                }
+            }
+
+            // Immediately refresh the real-time bays, capacity bars, and logs
+            renderParkingZoneDetails();
+        }, 600);
+
+    } catch (err) {
+        console.error("AI Video Analysis error:", err);
+        if (statusEl) statusEl.classList.add('hidden');
+        alert(`❌ AI Video Processing Error: ${err.message}`);
+    } finally {
+        if (btnProcess) {
+            btnProcess.disabled = false;
+            btnProcess.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    }
+}
+
 window.exportSingleZoneData = async function(zoneId) {
     const detail = await fetchAPI(`/availability/${zoneId}`);
     if (!detail) return;
