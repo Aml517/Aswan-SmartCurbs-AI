@@ -8,6 +8,7 @@ from app.services.reservation_service import (
     create_reservation,
     get_reservation,
     cancel_reservation,
+    complete_reservation,
     list_reservations
 )
 
@@ -60,3 +61,12 @@ def cancel(reservation_id: int, db: Session = Depends(get_db)):
     Frees the parking space back to available automatically.
     """
     return cancel_reservation(reservation_id, db)
+
+
+@router.patch("/reservations/{reservation_id}/complete", response_model=ReservationResponse)
+def complete(reservation_id: int, db: Session = Depends(get_db)):
+    """
+    Mark an active reservation as completed/used when the parking session ends.
+    Frees the parking space back to available automatically.
+    """
+    return complete_reservation(reservation_id, db)

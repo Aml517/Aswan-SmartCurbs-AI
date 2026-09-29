@@ -12,6 +12,8 @@
 // the app needs to change.
 // --------------------------------------------------------------------------
 
+import { completeReservation } from "./api";
+
 const KEYS = {
   reservations: "smartcurbs_history_reservations",
   sessions: "smartcurbs_history_sessions",
@@ -50,8 +52,21 @@ function nextId(prefix) {
 /** Log a reservation the driver just made, for the History → Reservations tab. */
 export function recordReservation(entry) {
   const list = readList(KEYS.reservations);
-  const record = { id: nextId("res"), createdAt: new Date().toISOString(), ...entry };
-  list.unshift(record);
+  const record = {
+    id: entry.reservationId ? `res-${entry.reservationId}` : nextId("res"),
+    createdAt: new Date().toISOString(),
+    ...entry,
+  };
+  
+  // Deduplicate by reservationId
+  const existingIndex = list.findIndex(
+    (r) => (entry.reservationId && r.reservationId === entry.reservationId) || r.id === record.id
+  );
+  if (existingIndex >= 0) {
+    list[existingIndex] = { ...list[existingIndex], ...record };
+  } else {
+    list.unshift(record);
+  }
   writeList(KEYS.reservations, list);
   return record;
 }
@@ -112,8 +127,9 @@ export function getSessionHistory() {
  * End an active session: marks it completed, stores the final cost, and —
  * when there's a charge — generates the matching payment + receipt records
  * (History → Payments / Receipts tabs).
+ * Also marks the initiating reservation as COMPLETED and frees the space.
  */
-export function endSession(sessionId, finalCost) {
+export async function endSession(sessionId, finalCost) {
   const list = readList(KEYS.sessions);
   const index = list.findIndex((session) => session.id === sessionId);
   if (index === -1) return null;
@@ -124,10 +140,31 @@ export function endSession(sessionId, finalCost) {
   writeList(KEYS.sessions, list);
   const session = list[index];
 
+  // 1. Update the associated reservation in history to COMPLETED
+  if (session.reservationId) {
+    const resList = readList(KEYS.reservations);
+    const resIndex = resList.findIndex(
+      (r) => r.reservationId === session.reservationId || r.id === `res-${session.reservationId}` || r.id === session.reservationId
+    );
+    if (resIndex >= 0) {
+      resList[resIndex] = { ...resList[resIndex], status: "completed" };
+      writeList(KEYS.reservations, resList);
+    }
+
+    // 2. Call backend API to mark reservation completed and release space
+    try {
+      await completeReservation(session.reservationId);
+    } catch (err) {
+      console.warn("Backend reservation completion notice:", err?.message || err);
+    }
+  }
+
+  // 3. Create or update exactly one payment record
   if (roundedCost > 0) {
     const payment = {
       id: nextId("pay"),
       sessionId,
+      reservationId: session.reservationId ?? null,
       zoneName: session.zoneName,
       amount: roundedCost,
       method: "In-app payment",
@@ -135,13 +172,21 @@ export function endSession(sessionId, finalCost) {
       createdAt: endedAt,
     };
     const payments = readList(KEYS.payments);
-    payments.unshift(payment);
+    // Replace if same session already existed, otherwise unshift
+    const existingPayIdx = payments.findIndex((p) => p.sessionId === sessionId);
+    if (existingPayIdx >= 0) {
+      payments[existingPayIdx] = payment;
+    } else {
+      payments.unshift(payment);
+    }
     writeList(KEYS.payments, payments);
 
+    // 4. Create exactly one receipt record
     const receipt = {
       id: nextId("rcpt"),
       sessionId,
       paymentId: payment.id,
+      reservationId: session.reservationId ?? null,
       zoneName: session.zoneName,
       spaceNumber: session.spaceNumber,
       plateNumber: session.plateNumber,
@@ -151,12 +196,18 @@ export function endSession(sessionId, finalCost) {
       createdAt: endedAt,
     };
     const receipts = readList(KEYS.receipts);
-    receipts.unshift(receipt);
+    const existingRcptIdx = receipts.findIndex((r) => r.sessionId === sessionId);
+    if (existingRcptIdx >= 0) {
+      receipts[existingRcptIdx] = receipt;
+    } else {
+      receipts.unshift(receipt);
+    }
     writeList(KEYS.receipts, receipts);
   }
 
   return session;
 }
+
 
 export function getPaymentHistory() {
   return readList(KEYS.payments);

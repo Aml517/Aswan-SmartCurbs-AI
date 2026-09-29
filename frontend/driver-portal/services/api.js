@@ -263,3 +263,32 @@ export async function getReservation(id) {
   return normalizeReservation(data);
 }
 
+/**
+ * Mark an active reservation as completed when parking session ends.
+ * Backend: PATCH /api/v1/reservations/{id}/complete
+ */
+export async function completeReservation(id) {
+  if (USE_MOCK_DATA) {
+    const res = mockReservations.find((r) => r.id === Number(id));
+    if (res) res.status = "completed";
+    return delay(res ? normalizeReservation(res) : null);
+  }
+  const { data } = await apiClient.patch(`/reservations/${id}/complete`);
+  return normalizeReservation(data);
+}
+
+/**
+ * Cancel an active reservation.
+ * Backend: PATCH /api/v1/reservations/{id}/cancel
+ */
+export async function cancelReservation(id) {
+  if (USE_MOCK_DATA) {
+    const res = mockReservations.find((r) => r.id === Number(id));
+    if (res) res.status = "cancelled";
+    return delay(res ? normalizeReservation(res) : null);
+  }
+  const { data } = await apiClient.patch(`/reservations/${id}/cancel`);
+  return normalizeReservation(data);
+}
+
+

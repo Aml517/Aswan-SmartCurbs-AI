@@ -52,10 +52,10 @@ export default function ParkingSession() {
     );
   }
 
-  function handleEndSession() {
-    const finalElapsedMs = Date.now() - new Date(session.startedAt).getTime();
+  async function handleEndSession() {
+    const finalElapsedMs = Math.max(0, Date.now() - new Date(session.startedAt).getTime());
     const finalCost = computeCost(session.hourlyRate, finalElapsedMs);
-    const updated = endSession(session.id, finalCost);
+    const updated = await endSession(session.id, finalCost);
     setSession(updated);
   }
 

@@ -109,9 +109,40 @@ def cancel_reservation(reservation_id: int, db: Session) -> Reservation:
     return reservation
 
 
+def complete_reservation(reservation_id: int, db: Session) -> Reservation:
+    """
+    Mark an active reservation as completed/used when the parking session ends.
+    - Sets reservation status to "completed".
+    - Frees the parking space back to "available".
+    """
+    reservation = get_reservation(reservation_id, db)
+
+    if reservation.status != "active":
+        # If already completed, return as is
+        if reservation.status == "completed":
+            return reservation
+        raise HTTPException(
+            status_code=400,
+            detail=f"Reservation {reservation_id} is already '{reservation.status}'."
+        )
+
+    # Free the space
+    space = db.query(ParkingSpace).filter(ParkingSpace.id == reservation.space_id).first()
+    if space:
+        space.status = "available"
+
+    # Complete the reservation
+    reservation.status = "completed"
+
+    db.commit()
+    db.refresh(reservation)
+    return reservation
+
+
 def list_reservations(db: Session, skip: int = 0, limit: int = 50, status: str = None):
     """Fetch all reservations with optional status filter."""
     query = db.query(Reservation)
     if status:
         query = query.filter(Reservation.status == status)
-    return query.order_by(Reservation.id.desc()).offset(skip).limit(limit).all()
+    return query.order_by(Reservation.id.desc()).offset(skip).limit(limit).all()
+

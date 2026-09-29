@@ -151,6 +151,7 @@ export default function History() {
                   </p>
                 </div>
                 <div className="history-row-amount">{Number(p.amount).toFixed(2)} EGP</div>
+                <StatusPill status={p.status || "paid"} />
               </article>
             ))
           )}
@@ -178,6 +179,7 @@ export default function History() {
                   </p>
                 </div>
                 <div className="history-row-amount">{Number(r.amount).toFixed(2)} EGP</div>
+                <StatusPill status="completed" />
               </article>
             ))
           )}
