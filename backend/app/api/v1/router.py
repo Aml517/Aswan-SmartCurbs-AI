@@ -5,6 +5,7 @@ from app.api.v1 import zones
 from app.api.v1 import availability
 from app.api.v1 import reservations
 from app.api.v1 import analysis
+from app.api.v1 import auth
 
 # The main v1 router — included by main.py
 v1_router = APIRouter(prefix="/api/v1")
@@ -15,3 +16,4 @@ v1_router.include_router(zones.router, tags=["Zones"])
 v1_router.include_router(availability.router, tags=["Availability"])
 v1_router.include_router(reservations.router, tags=["Reservations"])
 v1_router.include_router(analysis.router, tags=["AI Video Analysis"])
+v1_router.include_router(auth.router)
