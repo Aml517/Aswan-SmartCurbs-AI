@@ -51,6 +51,16 @@ backend/app/media/uploads/*
 !backend/app/media/uploads/.gitkeep
 backend/app/media/processed_videos/*
 !backend/app/media/processed_videos/.gitkeep
+backend/media/uploads/*
+!backend/media/uploads/.gitkeep
+backend/media/processed_videos/*
+!backend/media/processed_videos/.gitkeep
+
+# ======================
+# Backups & Model Weights
+# ======================
+*.bak
+/yolov8n.pt
 
 # ======================
 # Logs
@@ -59,4 +69,3 @@ backend/app/media/processed_videos/*
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-

@@ -1,0 +1,26 @@
+{
+  "median_vehicle_width_px": 126.5,
+  "bays": [
+    {
+      "id": 1,
+      "bbox": [
+        124,
+        115,
+        263,
+        238
+      ],
+      "source": "observed"
+    },
+    {
+      "id": 2,
+      "bbox": [
+        207,
+        77,
+        321,
+        181
+      ],
+      "source": "observed"
+    }
+  ],
+  "note": "Image-space estimate; 'observed' = a vehicle is parked there, 'estimated_free' = a gap wide enough for one more."
+}

@@ -384,6 +384,284 @@
     </div>
 </div>
 
+<!-- Live Surveillance Camera Monitoring & Real-time Stream Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-soft mb-lg">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-md border-b border-outline-variant/40 mb-md">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="p-2 rounded-lg bg-teal-50 text-teal-700 font-bold flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[20px]">linked_camera</span>
+                </span>
+                <h2 class="font-headline-md text-headline-md text-primary">Live Surveillance Camera Monitoring</h2>
+                <span id="live-stream-status-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-slate-100 text-slate-600 border border-slate-300">
+                    STOPPED
+                </span>
+            </div>
+            <p id="live-camera-source-name" class="font-body-sm text-on-surface-variant mt-1">
+                Source: Windy Live Webcam — Portul Turistic Jurilovca (#1793889300)
+            </p>
+        </div>
+        <div class="flex items-center gap-2">
+            <button id="btn-start-live-stream" type="button" onclick="startLiveCameraStream(event)" class="relative z-30 pointer-events-auto cursor-pointer px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 active:scale-95">
+                <span class="material-symbols-outlined text-[16px]">play_circle</span>
+                <span>Start Live Feed</span>
+            </button>
+            <button id="btn-stop-live-stream" type="button" onclick="stopLiveCameraStream(event)" disabled class="relative z-30 pointer-events-auto px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 opacity-50 cursor-not-allowed active:scale-95">
+                <span class="material-symbols-outlined text-[16px]">stop_circle</span>
+                <span>Stop Live Feed</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Live Telemetry Stats Grid -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-md">
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <p class="text-[11px] text-gray-500 font-medium">Processing FPS</p>
+            <p id="live-fps-val" class="text-xl font-bold font-mono text-primary">0.0</p>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <p class="text-[11px] text-gray-500 font-medium">Vehicles in View</p>
+            <p id="live-vehicles-val" class="text-xl font-bold font-mono text-teal-700">0</p>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <p class="text-[11px] text-gray-500 font-medium">Frames Ingested</p>
+            <p id="live-frames-val" class="text-xl font-bold font-mono text-primary">0</p>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <p class="text-[11px] text-gray-500 font-medium">Active ByteTracks</p>
+            <p id="live-tracks-val" class="text-xl font-bold font-mono text-amber-700">None</p>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <p class="text-[11px] text-gray-500 font-medium">Min Vehicle Distance</p>
+            <p id="live-min-distance-val" class="text-xl font-bold font-mono text-indigo-700">--</p>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200">
+            <p class="text-[11px] text-gray-500 font-medium">Distance Alerts</p>
+            <p id="live-distance-warnings-val" class="text-xl font-bold font-mono text-emerald-600">0</p>
+        </div>
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 col-span-2 sm:col-span-3 lg:col-span-6">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-[11px] text-gray-500 font-medium">Calibration Mode:</span>
+                    <span id="live-calib-pill" class="px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded">
+                        External Demo Feed
+                    </span>
+                    <span id="live-calib-note" class="text-[11px] text-gray-500">
+                        Uncalibrated perspective (cm distances disabled — reported in px)
+                    </span>
+                </div>
+                <div class="flex items-center gap-1.5 text-xs">
+                    <span class="text-gray-500 text-[11px]">Proximity Threshold:</span>
+                    <span id="live-distance-threshold-badge" class="px-2 py-0.5 bg-amber-100 text-amber-900 rounded font-mono font-bold text-[11px]">
+                        120 px
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Annotated Video Stream Monitor -->
+    <div class="relative w-full aspect-video max-h-[500px] bg-slate-950 rounded-xl overflow-hidden border border-slate-800 shadow-inner flex items-center justify-center mb-md group">
+        <!-- Live Video Element (MJPEG Stream) -->
+        <img id="live-annotated-stream" 
+             src="../main_dashboard/screen.png" 
+             onerror="this.src='../main_dashboard/screen.png'"
+             alt="Live Annotated CCTV Stream" 
+             class="w-full h-full object-contain select-none" />
+        
+        <!-- Live Stream Overlay HUD -->
+        <div class="absolute top-3 left-3 flex items-center gap-2 pointer-events-none">
+            <span id="live-stream-feed-tag" class="px-2.5 py-1 rounded-md text-[11px] font-bold font-mono bg-slate-900/80 text-slate-300 backdrop-blur border border-slate-700/60 flex items-center gap-1.5">
+                <span id="live-stream-dot" class="w-2 h-2 rounded-full bg-slate-500"></span> IDLE
+            </span>
+            <span class="px-2 py-1 rounded-md text-[10px] font-mono bg-black/60 text-slate-300 backdrop-blur border border-slate-700/40 hidden sm:inline-block">
+                YOLOv8 + ByteTrack + Distance HUD
+            </span>
+        </div>
+        
+        <div class="absolute top-3 right-3 flex items-center gap-2">
+            <span id="live-stream-fps-badge" class="px-2 py-1 rounded-md text-[10px] font-mono bg-black/60 text-emerald-400 backdrop-blur border border-slate-700/40">
+                0.0 FPS
+            </span>
+            <button onclick="refreshLiveStreamPlayer()" title="Reconnect Video Stream" class="p-1.5 rounded-md bg-slate-900/80 hover:bg-slate-800 text-slate-300 border border-slate-700/60 transition-colors">
+                <span class="material-symbols-outlined text-[16px]">refresh</span>
+            </button>
+        </div>
+
+        <!-- Idle / Placeholder Overlay -->
+        <div id="live-stream-placeholder" class="absolute inset-0 z-20 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center">
+            <div class="w-14 h-14 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-400 flex items-center justify-center mb-3">
+                <span class="material-symbols-outlined text-3xl">videocam</span>
+            </div>
+            <h4 class="text-white font-bold text-base mb-1">Live AI Surveillance Stream Idle</h4>
+            <p class="text-slate-400 text-xs max-w-md mb-4">
+                Click <strong>"Connect & Stream Feed"</strong> to ingest the live webcam feed, run real-time YOLOv8 vehicle detection, ByteTrack tracking, and live vehicle-to-vehicle distance measurement.
+            </p>
+            <button id="btn-connect-stream-placeholder" type="button" onclick="startLiveCameraStream(event)" class="relative z-30 pointer-events-auto px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white rounded-xl text-xs font-bold transition-all shadow-lg hover:shadow-xl active:scale-95 flex items-center gap-1.5 cursor-pointer">
+                <span class="material-symbols-outlined text-[16px]">play_circle</span>
+                <span id="btn-connect-text">Connect & Stream Feed</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Live Vehicle-to-Vehicle Distance Radar Card -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-md mb-md">
+        <div class="lg:col-span-8 bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-teal-700 text-[20px]">straighten</span>
+                    <h3 class="font-title-sm text-xs font-bold uppercase tracking-wider text-slate-700">Live Vehicle Proximity & Distance Radar</h3>
+                </div>
+                <div class="flex items-center gap-1.5 text-xs text-gray-500">
+                    <span>Target: Ground Contact Points ((x1+x2)/2, y2)</span>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="text-[11px] uppercase font-semibold text-gray-500 border-b border-slate-200">
+                        <tr>
+                            <th class="pb-2">Vehicle Pair</th>
+                            <th class="pb-2">Measured Distance</th>
+                            <th class="pb-2">Units</th>
+                            <th class="pb-2">Proximity Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="live-distance-pairs-table" class="divide-y divide-slate-100 font-mono">
+                        <tr>
+                            <td colspan="4" class="py-4 text-center text-gray-400 font-sans italic">
+                                Live stream idle. Start the feed to view real-time proximity measurements.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="lg:col-span-4 bg-slate-50 p-4 rounded-xl border border-slate-200 flex flex-col justify-between">
+            <div>
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="material-symbols-outlined text-amber-600 text-[18px]">security</span>
+                    <h4 class="font-title-sm text-xs font-bold uppercase tracking-wider text-slate-700">Safety & Enforcement Logic</h4>
+                </div>
+                <p class="text-[11px] text-gray-600 leading-relaxed">
+                    Connecting lines highlight vehicle pairs. Red vectors indicate distances below the warning threshold to detect congestion, double parking, or curb obstruction.
+                </p>
+            </div>
+            <div class="pt-3 border-t border-slate-200 mt-2 space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-500">Active Proximity Warnings:</span>
+                    <span id="live-distance-warning-badge" class="font-bold font-mono text-emerald-700">0 Active</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                    <span class="text-gray-500">Calculation Method:</span>
+                    <span class="font-semibold text-slate-700">Euclidean on Ground Point</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Feed Status Banner -->
+    <div id="live-feed-banner" class="p-3 bg-slate-900 text-slate-200 rounded-xl text-xs font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-md">
+        <div class="flex items-center gap-2">
+            <span id="live-feed-ping" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+            <span id="live-feed-banner-status">Live feed worker is currently idle. Click "Start Live Feed" to stream.</span>
+        </div>
+        <div id="live-feed-last-updated" class="text-[11px] text-slate-400">
+            Last frame: None
+        </div>
+    </div>
+</div>
+
+<!-- System Testing & Quantitative Evaluation Suite Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-soft mb-lg">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-md border-b border-outline-variant/40 mb-md">
+        <div>
+            <div class="flex items-center gap-2">
+                <span class="p-2 rounded-lg bg-indigo-50 text-indigo-700 font-bold flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[20px]">fact_check</span>
+                </span>
+                <h2 class="font-headline-md text-headline-md text-primary">AI Testing & Quantitative Evaluation Suite</h2>
+                <span id="test-session-overall-badge" class="px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-slate-100 text-slate-600 border border-slate-300">
+                    READY
+                </span>
+            </div>
+            <p class="font-body-sm text-on-surface-variant mt-1">
+                Automated 8-stage verification pipeline across video ingestion, AI models, distance calculations, and municipal storage.
+            </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+            <button id="btn-run-tests" type="button" onclick="runAutomatedTestSuite(event)" class="relative z-30 pointer-events-auto cursor-pointer px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm hover:shadow-md active:scale-95 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px]">play_arrow</span>
+                <span>Run System Test Suite (Stages A–H)</span>
+            </button>
+            <a id="btn-export-csv" href="http://127.0.0.1:8001/api/v1/analysis/test-session/export/csv" target="_blank" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all border border-slate-300 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">download</span>
+                <span>Export Distances (CSV)</span>
+            </a>
+            <a id="btn-export-json" href="http://127.0.0.1:8001/api/v1/analysis/test-session/export/json" target="_blank" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all border border-slate-300 flex items-center gap-1">
+                <span class="material-symbols-outlined text-[16px]">code</span>
+                <span>Audit JSON</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Testing Stages Grid (A–H) -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 mb-md">
+        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-center" id="card-stage-A">
+            <p class="text-[10px] text-gray-500 font-bold uppercase">Stage A</p>
+            <p class="text-xs font-semibold text-slate-800 truncate" title="Stream Ingest">Stream Ingest</p>
+            <span id="badge-stage-A" class="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-slate-200 text-slate-600">--</span>
+        </div>
+        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-center" id="card-stage-B">
+            <p class="text-[10px] text-gray-500 font-bold uppercase">Stage B</p>
+            <p class="text-xs font-semibold text-slate-800 truncate" title="YOLO Detection">YOLO Detect</p>
+            <span id="badge-stage-B" class="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-slate-200 text-slate-600">--</span>
+        </div>
+        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-center" id="card-stage-C">
+            <p class="text-[10px] text-gray-500 font-bold uppercase">Stage C</p>
+            <p class="text-xs font-semibold text-slate-800 truncate" title="ByteTrack">ByteTrack</p>
+            <span id="badge-stage-C" class="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-slate-200 text-slate-600">--</span>
+        </div>
+        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-center" id="card-stage-D">
+            <p class="text-[10px] text-gray-500 font-bold uppercase">Stage D</p>
+            <p class="text-xs font-semibold text-slate-800 truncate" title="Distance Eval">Distance Eval</p>
+            <span id="badge-stage-D" class="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-slate-200 text-slate-600">--</span>
+        </div>
+        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-center" id="card-stage-E">
+            <p class="text-[10px] text-gray-500 font-bold uppercase">Stage E</p>
+            <p class="text-xs font-semibold text-slate-800 truncate" title="Space Occupancy">Space Occupancy</p>
+            <span id="badge-stage-E" class="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-slate-200 text-slate-600">--</span>
+        </div>
+        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-center" id="card-stage-F">
+            <p class="text-[10px] text-gray-500 font-bold uppercase">Stage F</p>
+            <p class="text-xs font-semibold text-slate-800 truncate" title="ANPR License">ANPR License</p>
+            <span id="badge-stage-F" class="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-slate-200 text-slate-600">--</span>
+        </div>
+        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-center" id="card-stage-G">
+            <p class="text-[10px] text-gray-500 font-bold uppercase">Stage G</p>
+            <p class="text-xs font-semibold text-slate-800 truncate" title="Backend API">Backend API</p>
+            <span id="badge-stage-G" class="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-slate-200 text-slate-600">--</span>
+        </div>
+        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-center" id="card-stage-H">
+            <p class="text-[10px] text-gray-500 font-bold uppercase">Stage H</p>
+            <p class="text-xs font-semibold text-slate-800 truncate" title="System Resources">System Resources</p>
+            <span id="badge-stage-H" class="inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-slate-200 text-slate-600">--</span>
+        </div>
+    </div>
+
+    <!-- Test Metrics Summary Banner -->
+    <div id="test-session-details" class="p-3 bg-slate-900 text-slate-200 rounded-xl text-xs font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="flex items-center gap-2">
+            <span id="test-session-indicator" class="w-2.5 h-2.5 rounded-full bg-slate-500"></span>
+            <span id="test-session-summary-text">Ready to run verification suite. Click button above to initiate.</span>
+        </div>
+        <div id="test-session-time" class="text-[11px] text-slate-400">
+            Last run: Never
+        </div>
+    </div>
+</div>
+
 <!-- Main Visual Section: Real-time Map & Dynamic Bays -->
 <div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-lg shadow-soft">
 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-lg">
@@ -417,4 +695,66 @@
 </p>
 </div>
 </main>
-<script src="../admin-api.js"></script></body></html>
+<script src="../admin-api.js?v=2.7.0"></script>
+<script>
+    // Bulletproof direct event bindings for CCTV & AI Test Suite buttons
+    (function initDirectButtonListeners() {
+        function attachListeners() {
+            const btnConnect = document.getElementById('btn-connect-stream-placeholder');
+            const btnStart = document.getElementById('btn-start-live-stream');
+            const btnStop = document.getElementById('btn-stop-live-stream');
+            const btnRun = document.getElementById('btn-run-tests');
+            const btnCsv = document.getElementById('btn-export-csv');
+            const btnJson = document.getElementById('btn-export-json');
+
+            // Dynamic export link host alignment
+            const apiHost = (window.location && window.location.hostname) ? window.location.hostname : '127.0.0.1';
+            if (btnCsv) btnCsv.href = `http://${apiHost}:8001/api/v1/analysis/test-session/export/csv`;
+            if (btnJson) btnJson.href = `http://${apiHost}:8001/api/v1/analysis/test-session/export/json`;
+
+            if (btnConnect && !btnConnect.dataset.directBound) {
+                btnConnect.dataset.directBound = 'true';
+                btnConnect.addEventListener('click', (e) => {
+                    if (typeof window.startLiveCameraStream === 'function') {
+                        window.startLiveCameraStream(e);
+                    }
+                });
+            }
+
+            if (btnStart && !btnStart.dataset.directBound) {
+                btnStart.dataset.directBound = 'true';
+                btnStart.addEventListener('click', (e) => {
+                    if (typeof window.startLiveCameraStream === 'function') {
+                        window.startLiveCameraStream(e);
+                    }
+                });
+            }
+
+            if (btnStop && !btnStop.dataset.directBound) {
+                btnStop.dataset.directBound = 'true';
+                btnStop.addEventListener('click', (e) => {
+                    if (typeof window.stopLiveCameraStream === 'function') {
+                        window.stopLiveCameraStream(e);
+                    }
+                });
+            }
+
+            if (btnRun && !btnRun.dataset.directBound) {
+                btnRun.dataset.directBound = 'true';
+                btnRun.addEventListener('click', (e) => {
+                    if (typeof window.runAutomatedTestSuite === 'function') {
+                        window.runAutomatedTestSuite(e);
+                    }
+                });
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', attachListeners);
+        } else {
+            attachListeners();
+        }
+    })();
+</script>
+</body></html>
+

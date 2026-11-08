@@ -14,11 +14,27 @@
     "max_stay_minutes": 120,
     "overstay_demo_seconds": 60
   },
+  "source": {
+    "mode": "file",
+    "video_path": "data/input.mp4",
+    "webcam_index": 0,
+    "rtsp_url": "https://s5.webcamromania.ro/tljurilovca/index.m3u8",
+    "windy_webcam_id": "1793889300",
+    "reconnect_attempts": 3,
+    "reconnect_delay_sec": 1.0,
+    "replay_fps": null
+  },
+  "windy": {
+    "api_key": "cgKO8KDfevVavn7lCPPudl806NicPOPC",
+    "webcam_id": "1793889300",
+    "stream_url": "https://s5.webcamromania.ro/tljurilovca/index.m3u8"
+  },
   "thresholds": {
     "stationary_seconds": 2.0,
     "stationary_px": 5.0,
     "max_curb_distance_cm": 50.0,
-    "min_gap_cm": 30.0
+    "min_gap_cm": 30.0,
+    "stable_frames": 3
   },
   "anpr": {
     "enabled": false,
@@ -26,7 +42,13 @@
   },
   "backend": {
     "enabled": true,
-    "url": "http://127.0.0.1:8001/api/v1"
+    "url": "http://127.0.0.1:8001/api/v1",
+    "api_base": "http://127.0.0.1:8001/api/v1",
+    "zone_id": 1,
+    "space_map": {
+      "1": 1,
+      "2": 2
+    }
   },
   "calibration": {
     "enabled": true,
@@ -71,5 +93,18 @@
   "protected_access_areas": [],
   "authorized_plates": [],
   "enforce_configured_bays": false,
-  "parking_spaces": {}
+  "parking_spaces": {
+    "1": [
+      [171, 242],
+      [254, 218],
+      [263, 184],
+      [144, 145]
+    ],
+    "2": [
+      [276, 185],
+      [308, 161],
+      [321, 111],
+      [203, 101]
+    ]
+  }
 }

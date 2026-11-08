@@ -2,23 +2,49 @@
 // Aswan SmartCurbs AI — Comprehensive Admin Dashboard DB Controller
 // ==========================================================================
 
-const API_BASE = 'http://127.0.0.1:8001/api/v1';
+function getInitialAPIBase() {
+    if (typeof window !== 'undefined' && window.location && window.location.hostname) {
+        const proto = window.location.protocol === 'https:' ? 'https:' : 'http:';
+        return `${proto}//${window.location.hostname}:8001/api/v1`;
+    }
+    return 'http://127.0.0.1:8001/api/v1';
+}
+
+let API_BASE = getInitialAPIBase();
 
 async function fetchAPI(endpoint, options = {}) {
-    try {
-        const res = await fetch(`${API_BASE}${endpoint}`, {
-            headers: { 'Content-Type': 'application/json' },
-            ...options
-        });
-        if (!res.ok) {
-            const err = await res.json().catch(() => ({}));
-            throw new Error(err.detail || `HTTP ${res.status}`);
+    const urlsToTry = [
+        `${API_BASE}${endpoint}`,
+        `http://127.0.0.1:8001/api/v1${endpoint}`,
+        `http://localhost:8001/api/v1${endpoint}`
+    ];
+    const uniqueUrls = [...new Set(urlsToTry)];
+
+    let lastError = null;
+    for (const url of uniqueUrls) {
+        try {
+            const res = await fetch(url, {
+                headers: { 'Content-Type': 'application/json' },
+                ...options
+            });
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                throw new Error(err.detail || `HTTP ${res.status}`);
+            }
+            const baseMatch = url.match(/^(https?:\/\/[^\/]+\/api\/v1)/);
+            if (baseMatch && baseMatch[1] !== API_BASE) {
+                API_BASE = baseMatch[1];
+            }
+            return await res.json();
+        } catch (err) {
+            lastError = err;
+            if (err.message && err.message.startsWith('HTTP ')) {
+                break;
+            }
         }
-        return await res.json();
-    } catch (err) {
-        console.warn(`[Admin DB Controller] ${endpoint} error:`, err.message);
-        return null;
     }
+    console.warn(`[Admin DB Controller] ${endpoint} error:`, lastError ? lastError.message : 'Unknown');
+    return null;
 }
 
 // --------------------------------------------------------------------------
@@ -562,7 +588,9 @@ async function renderParkingZoneDetails() {
     if (grid && detail.spaces) {
         grid.innerHTML = '';
         const subtitle = document.getElementById('zone-grid-subtitle');
-        if (subtitle) subtitle.textContent = `Live sensor & AI camera mapping for ${detail.zone_name} (${detail.spaces.length} Total Bays)`;
+        if (subtitle) {
+            subtitle.textContent = `Live sensor mapping for ${detail.zone_name} (${detail.spaces.length} Total Bays) • External demo webcam isolated from Aswan parking bays`;
+        }
 
         detail.spaces.forEach(s => {
             let borderClass = 'border-emerald-500 bg-emerald-50/60 text-emerald-950';
@@ -574,7 +602,7 @@ async function renderParkingZoneDetails() {
                 borderClass = 'border-rose-500 bg-rose-50/60 text-rose-950';
                 badgeBg = 'bg-rose-100 text-rose-800';
                 icon = 'directions_car';
-                label = 'OCCUPIED (AI)';
+                label = 'OCCUPIED';
             } else if (s.status === 'reserved') {
                 borderClass = 'border-amber-500 bg-amber-50/60 text-amber-950';
                 badgeBg = 'bg-amber-100 text-amber-800';
@@ -802,6 +830,531 @@ async function executeVideoUpload(file, zoneId) {
             btnProcess.disabled = false;
             btnProcess.classList.remove('opacity-50', 'cursor-not-allowed');
         }
+    }
+}
+
+// --------------------------------------------------------------------------
+// 4b. Live Surveillance Camera Stream Controller (Windy / HLS / RTSP)
+// --------------------------------------------------------------------------
+let liveStreamPollingInterval = null;
+let isConnectingLiveStream = false;
+
+window.startLiveCameraStream = async function(event) {
+    if (event) {
+        if (typeof event.preventDefault === 'function') event.preventDefault();
+        if (typeof event.stopPropagation === 'function') event.stopPropagation();
+    }
+    isConnectingLiveStream = true;
+    const btnStart = document.getElementById('btn-start-live-stream');
+    const btnStop = document.getElementById('btn-stop-live-stream');
+    const btnConnect = document.getElementById('btn-connect-stream-placeholder');
+    const btnConnectText = document.getElementById('btn-connect-text');
+    const badge = document.getElementById('live-stream-status-badge');
+    const bannerStatus = document.getElementById('live-feed-banner-status');
+    const streamImg = document.getElementById('live-annotated-stream');
+    const placeholder = document.getElementById('live-stream-placeholder');
+    const feedTag = document.getElementById('live-stream-feed-tag');
+
+    // 1. Immediate visual feedback
+    if (btnStart) {
+        btnStart.disabled = true;
+        btnStart.classList.add('opacity-50', 'cursor-not-allowed');
+        btnStart.innerHTML = `<span class="material-symbols-outlined text-[16px] animate-spin">sync</span><span>Starting...</span>`;
+    }
+    if (btnConnect) {
+        btnConnect.disabled = true;
+        btnConnect.classList.add('opacity-50', 'cursor-not-allowed');
+        btnConnect.innerHTML = `<span class="material-symbols-outlined text-[16px] animate-spin">sync</span><span id="btn-connect-text">Connecting to camera feed...</span>`;
+    }
+
+    if (bannerStatus) bannerStatus.textContent = 'Connecting to live camera stream & loading YOLOv8 + ByteTrack...';
+    if (badge) {
+        badge.textContent = 'CONNECTING...';
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-amber-100 text-amber-800 border border-amber-300 animate-pulse';
+    }
+    if (feedTag) feedTag.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span> CONNECTING';
+
+    try {
+        const res = await fetchAPI('/analysis/live/start', {
+            method: 'POST',
+            body: JSON.stringify({
+                mode: 'windy',
+                zone_id: 1,
+                is_external_demo: true,
+                max_fps: 12.0,
+                warning_threshold: 120.0
+            })
+        });
+
+        if (res && res.success) {
+            isConnectingLiveStream = false;
+            if (placeholder) placeholder.classList.add('hidden');
+            if (streamImg) {
+                streamImg.src = `${API_BASE}/analysis/live/stream?t=${Date.now()}`;
+            }
+            if (badge) {
+                badge.textContent = 'STREAMING LIVE';
+                badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-emerald-100 text-emerald-800 border border-emerald-300 animate-pulse';
+            }
+            if (feedTag) feedTag.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> LIVE';
+
+            if (btnStop) {
+                btnStop.disabled = false;
+                btnStop.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+            if (btnStart) {
+                btnStart.innerHTML = `<span class="material-symbols-outlined text-[16px]">play_circle</span><span>Start Live Feed</span>`;
+            }
+
+            // Start frequent polling for real-time telemetry (every 1.2s)
+            if (!liveStreamPollingInterval) {
+                liveStreamPollingInterval = setInterval(updateLiveStreamTelemetry, 1200);
+            }
+            updateLiveStreamTelemetry();
+        } else {
+            throw new Error(res?.message || 'Failed to start live stream');
+        }
+    } catch (err) {
+        isConnectingLiveStream = false;
+        console.error('Error starting live stream:', err);
+        if (placeholder) placeholder.classList.remove('hidden');
+        if (btnStart) {
+            btnStart.disabled = false;
+            btnStart.classList.remove('opacity-50', 'cursor-not-allowed');
+            btnStart.innerHTML = `<span class="material-symbols-outlined text-[16px]">play_circle</span><span>Start Live Feed</span>`;
+        }
+        if (btnConnect) {
+            btnConnect.disabled = false;
+            btnConnect.classList.remove('opacity-50', 'cursor-not-allowed');
+            btnConnect.innerHTML = `<span class="material-symbols-outlined text-[16px]">play_circle</span><span id="btn-connect-text">Connect & Stream Feed</span>`;
+        }
+        if (badge) {
+            badge.textContent = 'ERROR';
+            badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-rose-100 text-rose-800 border border-rose-300';
+        }
+        if (bannerStatus) bannerStatus.textContent = `Error: ${err.message}`;
+    }
+};
+
+window.stopLiveCameraStream = async function() {
+    const btnStart = document.getElementById('btn-start-live-stream');
+    const btnStop = document.getElementById('btn-stop-live-stream');
+    const btnConnect = document.getElementById('btn-connect-stream-placeholder');
+    const btnConnectText = document.getElementById('btn-connect-text');
+    const badge = document.getElementById('live-stream-status-badge');
+    const bannerStatus = document.getElementById('live-feed-banner-status');
+    const streamImg = document.getElementById('live-annotated-stream');
+    const placeholder = document.getElementById('live-stream-placeholder');
+    const feedTag = document.getElementById('live-stream-feed-tag');
+
+    try {
+        const res = await fetchAPI('/analysis/live/stop', { method: 'POST' });
+        if (btnStop) {
+            btnStop.disabled = true;
+            btnStop.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+        if (btnStart) {
+            btnStart.disabled = false;
+            btnStart.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+        if (btnConnect) {
+            btnConnect.disabled = false;
+            btnConnect.classList.remove('opacity-50', 'cursor-not-allowed');
+            if (btnConnectText) btnConnectText.textContent = 'Connect & Stream Feed';
+        }
+        if (badge) {
+            badge.textContent = 'STOPPED';
+            badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-slate-100 text-slate-600 border border-slate-300';
+        }
+        if (bannerStatus) bannerStatus.textContent = 'Live stream processing stopped.';
+        if (streamImg) {
+            streamImg.src = '../main_dashboard/screen.png';
+        }
+        if (placeholder) placeholder.classList.remove('hidden');
+        if (feedTag) feedTag.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-500"></span> IDLE';
+
+        if (liveStreamPollingInterval) {
+            clearInterval(liveStreamPollingInterval);
+            liveStreamPollingInterval = null;
+        }
+        updateLiveStreamTelemetry();
+    } catch (err) {
+        console.error('Error stopping live stream:', err);
+    }
+};
+
+window.refreshLiveStreamPlayer = function() {
+    const streamImg = document.getElementById('live-annotated-stream');
+    if (streamImg) {
+        streamImg.src = `${API_BASE}/analysis/live/stream?t=${Date.now()}`;
+    }
+};
+
+async function updateLiveStreamTelemetry() {
+    const badge = document.getElementById('live-stream-status-badge');
+    const fpsEl = document.getElementById('live-fps-val');
+    const vehiclesEl = document.getElementById('live-vehicles-val');
+    const framesEl = document.getElementById('live-frames-val');
+    const tracksEl = document.getElementById('live-tracks-val');
+    const minDistanceEl = document.getElementById('live-min-distance-val');
+    const distanceWarningsEl = document.getElementById('live-distance-warnings-val');
+    const thresholdBadge = document.getElementById('live-distance-threshold-badge');
+    const pairsTable = document.getElementById('live-distance-pairs-table');
+    const warningBadge = document.getElementById('live-distance-warning-badge');
+    const fpsBadge = document.getElementById('live-stream-fps-badge');
+    const streamImg = document.getElementById('live-annotated-stream');
+    const placeholder = document.getElementById('live-stream-placeholder');
+    const feedTag = document.getElementById('live-stream-feed-tag');
+    const calibPill = document.getElementById('live-calib-pill');
+    const calibNote = document.getElementById('live-calib-note');
+    const bannerStatus = document.getElementById('live-feed-banner-status');
+    const ping = document.getElementById('live-feed-ping');
+    const lastUpdateEl = document.getElementById('live-feed-last-updated');
+    const btnStart = document.getElementById('btn-start-live-stream');
+    const btnStop = document.getElementById('btn-stop-live-stream');
+    const btnConnect = document.getElementById('btn-connect-stream-placeholder');
+    const btnConnectText = document.getElementById('btn-connect-text');
+
+    if (!badge) return; // Not on page with live stream card
+
+    const status = await fetchAPI('/analysis/live/status');
+    if (!status) return;
+
+    const fps = status.current_fps || 0.0;
+    if (fpsEl) fpsEl.textContent = fps.toFixed(1);
+    if (fpsBadge) fpsBadge.textContent = `${fps.toFixed(1)} FPS`;
+    if (vehiclesEl) vehiclesEl.textContent = status.vehicles_detected_count ?? 0;
+    if (framesEl) framesEl.textContent = status.frames_processed ?? 0;
+    if (tracksEl) {
+        tracksEl.textContent = (status.active_track_ids && status.active_track_ids.length > 0)
+            ? status.active_track_ids.slice(0, 5).join(', ') + (status.active_track_ids.length > 5 ? '…' : '')
+            : 'None';
+    }
+
+    if (minDistanceEl) {
+        if (status.min_distance !== null && status.min_distance !== undefined && (status.active_distances && status.active_distances.length > 0)) {
+            const unit = (status.active_distances && status.active_distances.length > 0) ? status.active_distances[0].unit : 'px';
+            minDistanceEl.textContent = `${status.min_distance.toFixed(1)} ${unit}`;
+        } else {
+            minDistanceEl.textContent = 'N/A';
+        }
+    }
+
+    if (distanceWarningsEl) {
+        const count = status.distance_warning_count || 0;
+        distanceWarningsEl.textContent = count;
+        distanceWarningsEl.className = count > 0 
+            ? 'text-xl font-bold font-mono text-rose-600 animate-pulse'
+            : 'text-xl font-bold font-mono text-emerald-600';
+    }
+
+    if (warningBadge) {
+        const count = status.distance_warning_count || 0;
+        warningBadge.textContent = `${count} Active`;
+        warningBadge.className = count > 0 ? 'font-bold font-mono text-rose-600' : 'font-bold font-mono text-emerald-700';
+    }
+
+    if (thresholdBadge && status.warning_threshold) {
+        thresholdBadge.textContent = `${status.warning_threshold.toFixed(0)} px`;
+    }
+
+    // Render active distances table
+    if (pairsTable) {
+        if (status.active_distances && status.active_distances.length > 0) {
+            pairsTable.innerHTML = status.active_distances.map(p => {
+                let statusBadge = '';
+                const isCalibrated = p.calibration_status === 'calibrated' || (p.unit && p.unit.toLowerCase().includes('cm'));
+                if (isCalibrated) {
+                    if (p.warning_status === 'critical') {
+                        statusBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">CRITICAL</span>';
+                    } else if (p.warning_status === 'warning') {
+                        statusBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">CLOSE PROXIMITY</span>';
+                    } else {
+                        statusBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">SAFE</span>';
+                    }
+                } else {
+                    // Uncalibrated / External Demo
+                    if (p.warning_status === 'critical') {
+                        statusBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300">CRITICAL (PX)</span>';
+                    } else if (p.warning_status === 'warning') {
+                        statusBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300">CLOSE (PX)</span>';
+                    } else {
+                        statusBadge = '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 text-slate-700 border border-slate-300">UNCALIBRATED</span>';
+                    }
+                }
+                return `
+                    <tr class="hover:bg-slate-100/60 transition-colors">
+                        <td class="py-2 font-bold text-slate-800">Track #${p.track_a} ↔ Track #${p.track_b}</td>
+                        <td class="py-2 font-mono font-bold ${p.is_warning ? 'text-rose-600' : 'text-slate-700'}">${p.distance.toFixed(1)}</td>
+                        <td class="py-2 text-gray-500 font-mono text-[11px]">${p.unit}</td>
+                        <td class="py-2">${statusBadge}</td>
+                    </tr>
+                `;
+            }).join('');
+        } else if (status.is_running && status.vehicles_detected_count < 2) {
+            pairsTable.innerHTML = `
+                <tr>
+                    <td colspan="4" class="py-3 text-center text-gray-400 font-sans italic text-xs">
+                        Need at least 2 tracked vehicles in view to compute pairwise distances (currently: ${status.vehicles_detected_count}).
+                    </td>
+                </tr>
+            `;
+        } else if (!status.is_running) {
+            pairsTable.innerHTML = `
+                <tr>
+                    <td colspan="4" class="py-4 text-center text-gray-400 font-sans italic text-xs">
+                        Live stream idle. Start the feed to view real-time proximity measurements.
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    // Dynamic export button alignment to active live session
+    const btnCsv = document.getElementById('btn-export-csv');
+    const btnJson = document.getElementById('btn-export-json');
+    if (status.session_id) {
+        if (btnCsv) btnCsv.href = `${API_BASE}/analysis/test-session/export/csv?session_id=${status.session_id}`;
+        if (btnJson) btnJson.href = `${API_BASE}/analysis/test-session/export/json?session_id=${status.session_id}`;
+    }
+
+    if (lastUpdateEl) {
+        lastUpdateEl.textContent = status.last_frame_processed_at
+            ? `Last frame: ${new Date(status.last_frame_processed_at).toLocaleTimeString()}`
+            : 'Last frame: None';
+    }
+
+    if (calibPill && calibNote) {
+        if (status.is_external_demo) {
+            calibPill.textContent = 'External Demo Feed';
+            calibPill.className = 'px-2 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded';
+            calibNote.textContent = 'Uncalibrated perspective (cm distances disabled — reported in px)';
+        } else {
+            calibPill.textContent = 'Calibrated Zone';
+            calibPill.className = 'px-2 py-0.5 bg-emerald-100 text-emerald-800 text-[10px] font-bold rounded';
+            calibNote.textContent = 'Ground homography applied';
+        }
+    }
+
+    if (status.is_running && status.is_connected) {
+        badge.textContent = 'STREAMING LIVE';
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-emerald-100 text-emerald-800 border border-emerald-300 animate-pulse';
+        if (ping) ping.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping';
+        if (feedTag) feedTag.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> LIVE';
+        if (placeholder) placeholder.classList.add('hidden');
+        if (streamImg && (streamImg.src.includes('screen.png') || !streamImg.src.includes('/analysis/live/stream'))) {
+            streamImg.src = `${API_BASE}/analysis/live/stream?t=${Date.now()}`;
+        }
+        if (bannerStatus) bannerStatus.textContent = `Live stream active: Ingesting frames from ${status.source_name}`;
+        if (btnStart) {
+            btnStart.disabled = true;
+            btnStart.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+        if (btnConnect) {
+            btnConnect.disabled = true;
+            btnConnect.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+        if (btnStop) {
+            btnStop.disabled = false;
+            btnStop.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    } else if (status.is_running && !status.is_connected) {
+        badge.textContent = 'CONNECTING / RECONNECTING';
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-amber-100 text-amber-800 border border-amber-300';
+        if (ping) ping.className = 'w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse';
+        if (feedTag) feedTag.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> RECONNECTING';
+        if (placeholder) placeholder.classList.add('hidden'); // Keep hidden while connecting!
+        if (bannerStatus) bannerStatus.textContent = status.last_error ? `Reconnecting: ${status.last_error}` : 'Connecting to live video stream...';
+        if (btnStart) {
+            btnStart.disabled = true;
+            btnStart.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+        if (btnConnect) {
+            btnConnect.disabled = true;
+            btnConnect.classList.add('opacity-50', 'cursor-not-allowed');
+            if (btnConnectText) btnConnectText.textContent = 'Connecting...';
+        }
+        if (btnStop) {
+            btnStop.disabled = false;
+            btnStop.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    } else if (isConnectingLiveStream) {
+        badge.textContent = 'CONNECTING...';
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-amber-100 text-amber-800 border border-amber-300 animate-pulse';
+        if (ping) ping.className = 'w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping';
+        if (feedTag) feedTag.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span> CONNECTING';
+        if (placeholder) placeholder.classList.add('hidden');
+        if (bannerStatus) bannerStatus.textContent = 'Initializing camera stream ingestion & AI models...';
+        if (btnStart) {
+            btnStart.disabled = true;
+            btnStart.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+        if (btnConnect) {
+            btnConnect.disabled = true;
+            btnConnect.classList.add('opacity-50', 'cursor-not-allowed');
+            if (btnConnectText) btnConnectText.textContent = 'Connecting to camera...';
+        }
+    } else {
+        badge.textContent = 'STOPPED';
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-slate-100 text-slate-600 border border-slate-300';
+        if (ping) ping.className = 'w-2.5 h-2.5 rounded-full bg-slate-500';
+        if (feedTag) feedTag.innerHTML = '<span class="w-2 h-2 rounded-full bg-slate-500"></span> IDLE';
+        if (placeholder) placeholder.classList.remove('hidden');
+        if (bannerStatus) bannerStatus.textContent = 'Live feed worker is currently idle. Click "Start Live Feed" to stream.';
+        if (btnStart) {
+            btnStart.disabled = false;
+            btnStart.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+        if (btnConnect) {
+            btnConnect.disabled = false;
+            btnConnect.classList.remove('opacity-50', 'cursor-not-allowed');
+            if (btnConnectText) btnConnectText.textContent = 'Connect & Stream Feed';
+        }
+        if (btnStop) {
+            btnStop.disabled = true;
+            btnStop.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+    }
+}
+
+// --------------------------------------------------------------------------
+// 4c. Automated AI Testing & Evaluation Suite Controller
+// --------------------------------------------------------------------------
+window.runAutomatedTestSuite = async function(event) {
+    if (event) {
+        if (typeof event.preventDefault === 'function') event.preventDefault();
+        if (typeof event.stopPropagation === 'function') event.stopPropagation();
+    }
+    const btnRun = document.getElementById('btn-run-tests');
+    const badge = document.getElementById('test-session-overall-badge');
+    const summaryText = document.getElementById('test-session-summary-text');
+    const ind = document.getElementById('test-session-indicator');
+
+    // 1. Immediate visual feedback on the button and scorecard
+    if (btnRun) {
+        btnRun.disabled = true;
+        btnRun.classList.add('opacity-50', 'cursor-not-allowed');
+        btnRun.innerHTML = `<span class="material-symbols-outlined text-[16px] animate-spin">sync</span><span>Running System Test Suite (Stages A–H)...</span>`;
+    }
+    if (badge) {
+        badge.textContent = 'RUNNING SUITE...';
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-amber-100 text-amber-800 border border-amber-300 animate-pulse';
+    }
+    if (ind) ind.className = 'w-2.5 h-2.5 rounded-full bg-amber-400 animate-ping';
+    if (summaryText) summaryText.textContent = 'Executing 8-stage verification pipeline across video ingestion, AI models, distance calculations, and municipal storage...';
+
+    // Highlight all stage cards as actively evaluating
+    ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].forEach(k => {
+        const badgeEl = document.getElementById(`badge-stage-${k}`);
+        if (badgeEl) {
+            badgeEl.textContent = 'RUNNING';
+            badgeEl.className = 'inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-indigo-100 text-indigo-700 border border-indigo-200 animate-pulse';
+        }
+    });
+
+    try {
+        const res = await fetchAPI('/analysis/test-session/run', {
+            method: 'POST',
+            body: JSON.stringify({
+                run_live_ingest: true,
+                live_ingest_frames: 10,
+                evaluate_calibrated_distance: true
+            })
+        });
+
+        if (res && (res.session_id || res.id || res.session_uuid || res.stages)) {
+            renderTestSessionResults(res);
+        } else {
+            throw new Error(res?.detail || 'Failed to complete test suite');
+        }
+    } catch (err) {
+        console.error('Error running test suite:', err);
+        if (badge) {
+            badge.textContent = 'ERROR';
+            badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-rose-100 text-rose-800 border border-rose-300';
+        }
+        if (summaryText) summaryText.textContent = `Test suite failed: ${err.message}`;
+    } finally {
+        if (btnRun) {
+            btnRun.disabled = false;
+            btnRun.classList.remove('opacity-50', 'cursor-not-allowed');
+            btnRun.innerHTML = `<span class="material-symbols-outlined text-[16px]">play_arrow</span><span>Run System Test Suite (Stages A–H)</span>`;
+        }
+    }
+};
+
+window.loadLatestTestSession = async function() {
+    try {
+        const res = await fetchAPI('/analysis/test-session/latest');
+        if (res && (res.session_id || res.id || res.session_uuid || res.stages)) {
+            renderTestSessionResults(res);
+        }
+    } catch (err) {
+        console.log('No prior test session found:', err);
+    }
+};
+
+function renderTestSessionResults(session) {
+    const badge = document.getElementById('test-session-overall-badge');
+    const summaryText = document.getElementById('test-session-summary-text');
+    const timeEl = document.getElementById('test-session-time');
+    const ind = document.getElementById('test-session-indicator');
+
+    if (!badge) return;
+
+    const overallStatus = session.overall_status || 'UNKNOWN';
+    badge.textContent = overallStatus;
+    if (overallStatus.toUpperCase().includes('PASS')) {
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-emerald-100 text-emerald-800 border border-emerald-300';
+        if (ind) ind.className = 'w-2.5 h-2.5 rounded-full bg-emerald-500';
+    } else {
+        badge.className = 'px-2.5 py-0.5 rounded-full text-xs font-bold font-mono bg-amber-100 text-amber-800 border border-amber-300';
+        if (ind) ind.className = 'w-2.5 h-2.5 rounded-full bg-amber-500';
+    }
+
+    const sessId = session.session_id || session.id || '1';
+    const btnCsv = document.getElementById('btn-export-csv');
+    const btnJson = document.getElementById('btn-export-json');
+    if (btnCsv) btnCsv.href = `${API_BASE}/analysis/test-session/export/csv?session_id=${sessId}`;
+    if (btnJson) btnJson.href = `${API_BASE}/analysis/test-session/export/json?session_id=${sessId}`;
+
+    if (timeEl) {
+        if (session.timestamp) {
+            const dateObj = new Date(session.timestamp);
+            const timeStr = isNaN(dateObj.getTime()) ? session.timestamp : dateObj.toLocaleTimeString();
+            timeEl.textContent = `Completed: ${timeStr} (Session #${sessId})`;
+        } else {
+            timeEl.textContent = `Completed: Just now (Session #${sessId})`;
+        }
+    }
+
+    const stages = session.stages || {};
+    const stageKeys = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    stageKeys.forEach(k => {
+        const stage = stages[k];
+        const badgeEl = document.getElementById(`badge-stage-${k}`);
+        if (badgeEl && stage !== undefined) {
+            const st = (typeof stage === 'object' ? stage.status : stage) || 'UNTESTED';
+            badgeEl.textContent = st;
+            if (st === 'PASS') {
+                badgeEl.className = 'inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-emerald-100 text-emerald-800 border border-emerald-200';
+            } else if (st === 'BLOCKED') {
+                badgeEl.className = 'inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-amber-100 text-amber-800 border border-amber-200';
+            } else {
+                badgeEl.className = 'inline-block mt-1 px-1.5 py-0.5 rounded text-[10px] font-bold font-mono bg-rose-100 text-rose-800 border border-rose-200';
+            }
+        }
+    });
+
+    const m = session.metrics || {};
+    const maeStr = (m.distance_mae_cm !== undefined && m.distance_mae_cm !== null) ? `${m.distance_mae_cm.toFixed(1)} cm` : 'N/A';
+    const fpsStr = (m.live_fps !== undefined && m.live_fps !== null) ? `${m.live_fps.toFixed(1)} FPS` : 'N/A';
+    const tolVal = (m.distance_tolerance_rate !== undefined && m.distance_tolerance_rate !== null)
+        ? (m.distance_tolerance_rate > 1 ? m.distance_tolerance_rate : m.distance_tolerance_rate * 100)
+        : null;
+    const tolStr = tolVal !== null ? `${tolVal.toFixed(0)}%` : 'N/A';
+    if (summaryText) {
+        summaryText.textContent = `Session #${sessId} Verified — Live FPS: ${fpsStr} | Distance MAE: ${maeStr} (Tolerance: ${tolStr}) | Models: YOLOv8n + ByteTrack`;
     }
 }
 
@@ -1147,7 +1700,7 @@ window.exportReservationsData = function() {
 // --------------------------------------------------------------------------
 // 6. Router & Live Polling (every 2.5s)
 // --------------------------------------------------------------------------
-document.addEventListener('DOMContentLoaded', () => {
+function initAdminApp() {
     setupNavigationAndBanner();
 
     const path = window.location.pathname;
@@ -1160,9 +1713,18 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (path.includes('parking_zone_details')) {
         renderParkingZoneDetails();
         setInterval(renderParkingZoneDetails, 2500);
+        updateLiveStreamTelemetry();
+        setInterval(updateLiveStreamTelemetry, 3000);
+        loadLatestTestSession();
     } else if (path.includes('reservations_management')) {
         renderReservationsManagement();
         setInterval(renderReservationsManagement, 2500);
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAdminApp);
+} else {
+    initAdminApp();
+}
 

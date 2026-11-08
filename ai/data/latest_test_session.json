@@ -1,0 +1,162 @@
+{
+  "session_uuid": "d1bc473e-4eb7-487f-8218-48aca16a7764",
+  "timestamp": "2026-11-08T11:54:32.634068+00:00",
+  "source_mode": "file",
+  "source_name": "Windy Live Webcam - Portul Turistic Jurilovca (#1793889300)",
+  "is_external_demo": true,
+  "is_calibrated": false,
+  "calibration_method": "Uncalibrated pixel Euclidean (live) / Homography cm (curb dataset)",
+  "total_frames": 5,
+  "elapsed_seconds": 0.03,
+  "average_fps": 196.74,
+  "dropped_frames": 0,
+  "reconnect_count": 0,
+  "avg_latency_ms": 3.29,
+  "detection_precision": 0.7692,
+  "detection_recall": 1.0,
+  "detection_f1": 0.8696,
+  "mean_iou": 0.9771,
+  "tracking_id_switches": 0,
+  "tracking_fragmentations": 0,
+  "distance_pairs_measured": 6,
+  "distance_unit": "px (uncalibrated) / cm",
+  "distance_mae": 3.1,
+  "distance_rmse": 3.1,
+  "distance_tolerance_rate": 100.0,
+  "stages_status": {
+    "stage_a_stream_health": "PASS",
+    "stage_b_detection": "PASS",
+    "stage_c_tracking": "PASS",
+    "stage_d_distance": "PASS",
+    "stage_e_occupancy": "PASS",
+    "stage_f_violations_anpr": "BLOCKED",
+    "stage_g_backend": "FAIL",
+    "stage_h_performance": "PASS"
+  },
+  "stage_details": {
+    "stage_a_h": {
+      "stream_pass": true,
+      "frames_processed": 5,
+      "dropped_frames": 0,
+      "elapsed_seconds": 0.03,
+      "avg_fps": 196.74,
+      "avg_total_latency_ms": 3.29,
+      "avg_cpu_percent": 1257.54,
+      "peak_ram_mb": 561.6
+    },
+    "stage_b_c": {
+      "precision": 0.7692,
+      "recall": 1.0,
+      "f1_score": 0.8696,
+      "mean_iou": 0.9771,
+      "id_switches": 0,
+      "fragmentations": 0
+    },
+    "stage_d": {
+      "calibrated_eval": {
+        "status": "EVALUATED",
+        "pairs_evaluated": 1,
+        "mae": 3.1,
+        "rmse": 3.1,
+        "median_error": 3.1,
+        "tolerance_threshold_cm": 15.0,
+        "tolerance_rate_pct": 100.0,
+        "range_breakdown": {
+          "close_under_100cm": {
+            "count": 0,
+            "mae": null,
+            "rmse": null
+          },
+          "medium_100_to_250cm": {
+            "count": 0,
+            "mae": null,
+            "rmse": null
+          },
+          "extended_over_250cm": {
+            "count": 1,
+            "mae": 3.1,
+            "rmse": 3.1
+          }
+        },
+        "predictions": [
+          {
+            "vehicle_1_id": 1,
+            "vehicle_2_id": 2,
+            "track_a": 1,
+            "track_b": 2,
+            "point_a": [
+              194.5,
+              240.0
+            ],
+            "point_b": [
+              263.0,
+              181.0
+            ],
+            "ground_point_a": [
+              239.7590361445784,
+              198.7951807228913
+            ],
+            "ground_point_b": [
+              408.84505249761395,
+              -99.74546611517712
+            ],
+            "midpoint": [
+              228.75,
+              210.5
+            ],
+            "distance": 343.1,
+            "unit": "cm",
+            "calibration_status": "calibrated",
+            "warning_status": "normal",
+            "is_warning": false,
+            "label": "Car 1 <-> Car 2: 343 cm"
+          }
+        ],
+        "calibration_method": "4-point planar perspective homography"
+      },
+      "sample_uncalibrated_pair": {
+        "vehicle_1_id": 1,
+        "vehicle_2_id": 2,
+        "track_a": 1,
+        "track_b": 2,
+        "point_a": [
+          150.0,
+          200.0
+        ],
+        "point_b": [
+          270.0,
+          200.0
+        ],
+        "ground_point_a": null,
+        "ground_point_b": null,
+        "midpoint": [
+          210.0,
+          200.0
+        ],
+        "distance": 120.0,
+        "unit": "px (uncalibrated)",
+        "calibration_status": "uncalibrated",
+        "warning_status": "uncalibrated",
+        "is_warning": false,
+        "label": "Car 1 <-> Car 2: 120 px (uncalibrated)"
+      }
+    },
+    "stage_e": {
+      "occupancy_accuracy": 1.0,
+      "occupied_spaces": 1,
+      "total_spaces": 1
+    },
+    "stage_f": {
+      "violations_overstay_detected": true,
+      "anpr_ready": false,
+      "hardware_disclosure": "Surveillance camera resolution (<15px plate height) limits optical character recognition."
+    },
+    "stage_g": {
+      "success_rate_pct": 0.0,
+      "avg_latency_ms": 15.0,
+      "total_requests": 3
+    }
+  },
+  "session_id": 27,
+  "id": 27
+}

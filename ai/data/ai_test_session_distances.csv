@@ -1,0 +1,7 @@
+session_id,session_uuid,timestamp,source_name,is_external_demo,vehicle_1_id,vehicle_2_id,distance,unit,calibration_status,warning_status
+27,d1bc473e-4eb7-487f-8218-48aca16a7764,2026-11-08T11:54:32.634068+00:00,Calibrated Corridor Benchmark / Live Webcam Stream,False,1,2,337.4,cm,calibrated,normal
+27,d1bc473e-4eb7-487f-8218-48aca16a7764,2026-11-08T11:54:32.634068+00:00,Calibrated Corridor Benchmark / Live Webcam Stream,False,1,2,337.4,cm,calibrated,normal
+27,d1bc473e-4eb7-487f-8218-48aca16a7764,2026-11-08T11:54:32.634068+00:00,Calibrated Corridor Benchmark / Live Webcam Stream,False,1,2,338.0,cm,calibrated,normal
+27,d1bc473e-4eb7-487f-8218-48aca16a7764,2026-11-08T11:54:32.634068+00:00,Calibrated Corridor Benchmark / Live Webcam Stream,False,1,2,338.0,cm,calibrated,normal
+27,d1bc473e-4eb7-487f-8218-48aca16a7764,2026-11-08T11:54:32.634068+00:00,Calibrated Corridor Benchmark / Live Webcam Stream,False,1,2,337.4,cm,calibrated,normal
+27,d1bc473e-4eb7-487f-8218-48aca16a7764,2026-11-08T11:54:32.634068+00:00,Calibrated Corridor Benchmark / Live Webcam Stream,False,1,2,343.1,cm,calibrated,normal

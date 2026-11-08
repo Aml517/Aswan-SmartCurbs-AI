@@ -12,7 +12,17 @@ import numpy as np
 from common import CFG, path, point_in_polygon, save_json
 from track import INPUT_VIDEO, load_tracks, process_video
 
-PARKING_SPACES: dict = {int(k): [tuple(p) for p in v] for k, v in CFG["parking_spaces"].items()}
+PARKING_SPACES: dict = {int(k): [tuple(p) for p in v] for k, v in CFG.get("parking_spaces", {}).items()}
+if not PARKING_SPACES:
+    _ps_path = path("parking_spaces.json")
+    if _ps_path.exists():
+        import json
+        try:
+            with open(_ps_path, encoding="utf-8") as _f:
+                for _item in json.load(_f):
+                    PARKING_SPACES[int(_item["id"])] = [tuple(_p) for _p in _item["points"]]
+        except Exception:
+            pass
 OCCUPANCY_OUTPUT_VIDEO = path("outputs/parking_occupancy_output.mp4")
 OCCUPANCY_JSON = path("outputs/occupancy_results.json")
 

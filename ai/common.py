@@ -92,12 +92,26 @@ def get_homography(cfg=None):
     Without it the system reports pixels only.
     """
     c = (cfg or CFG).get("calibration", {})
-    if not c.get("enabled") or len(c.get("image_points", [])) < 4:
+    if not c.get("enabled") or len(c.get("image_points", [])) < 4 or len(c.get("world_points_cm", [])) < 4:
         return None
-    H, _ = cv2.findHomography(np.float32(c["image_points"]), np.float32(c["world_points_cm"]))
-    return H
+    try:
+        H, _ = cv2.findHomography(np.float32(c["image_points"]), np.float32(c["world_points_cm"]))
+        if H is not None:
+            if np.isnan(H).any() or np.isinf(H).any() or abs(float(np.linalg.det(H))) < 1e-9:
+                return None
+        return H
+    except Exception:
+        return None
 
 
 def to_ground(H, point):
-    v = H @ np.array([point[0], point[1], 1.0])
-    return (float(v[0] / v[2]), float(v[1] / v[2]))
+    """Projects 2D image coordinates (x, y) to calibrated ground-plane cm using homography H."""
+    if H is None or point is None:
+        return None
+    try:
+        v = H @ np.array([float(point[0]), float(point[1]), 1.0], dtype=np.float64)
+        if abs(float(v[2])) < 1e-9:
+            return None
+        return (float(v[0] / v[2]), float(v[1] / v[2]))
+    except Exception:
+        return None

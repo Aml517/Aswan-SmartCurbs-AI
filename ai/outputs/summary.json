@@ -1,0 +1,13 @@
+{
+  "frames": 750,
+  "fps": 25.0,
+  "calibrated_cm": true,
+  "configured_spaces": 2,
+  "last_frame_capacity": {
+    "total": 2,
+    "occupied": 2,
+    "available": 0
+  },
+  "virtual_bays": 2,
+  "violation_candidates": {}
+}

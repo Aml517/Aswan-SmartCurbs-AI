@@ -10,14 +10,43 @@ app = FastAPI(
     version=settings.APP_VERSION
 )
 
-# Configure CORS for Driver Portal and admin dashboard
+# Configure CORS for Driver Portal, admin dashboard, and CCTV viewers
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5000",
+        "http://127.0.0.1:5000",
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:8001",
+        "http://127.0.0.1:8001",
+        "*",
+    ],
+    allow_origin_regex=r"^https?://(localhost|127\.0\.0\.1)(:\d+)?$",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
+
+
+@app.middleware("http")
+async def add_private_network_access_header(request, call_next):
+    """Support Chrome Private Network Access (PNA) preflights from local web pages."""
+    if request.method == "OPTIONS" and "access-control-request-private-network" in request.headers:
+        from starlette.responses import Response
+        response = Response(status_code=200)
+        origin = request.headers.get("origin", "*")
+        response.headers["Access-Control-Allow-Origin"] = origin
+        response.headers["Access-Control-Allow-Credentials"] = "true"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS, PATCH"
+        response.headers["Access-Control-Allow-Headers"] = request.headers.get("access-control-request-headers", "*")
+        response.headers["Access-Control-Allow-Private-Network"] = "true"
+        return response
+
+    response = await call_next(request)
+    response.headers["Access-Control-Allow-Private-Network"] = "true"
+    return response
 
 
 @app.on_event("startup")

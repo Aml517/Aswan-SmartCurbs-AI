@@ -7,10 +7,16 @@ from common import CFG
 
 class OccupancyPublisher:
     def __init__(self, cfg=CFG):
-        b = cfg["backend"]
-        self.enabled, self.base, self.zone_id, self.map = b["enabled"], b["api_base"].rstrip("/"), b["zone_id"], b["space_map"]
-        self.stable = cfg["thresholds"]["stable_frames"]
+        b = cfg.get("backend", {})
+        self.enabled = bool(b.get("enabled", False))
+        api_base = b.get("api_base") or b.get("url") or "http://127.0.0.1:8001/api/v1"
+        self.base = str(api_base).rstrip("/")
+        self.zone_id = int(b.get("zone_id", 1))
+        self.map = b.get("space_map", {"1": 1, "2": 2})
+        thresholds = cfg.get("thresholds", {})
+        self.stable = int(thresholds.get("stable_frames", 3))
         self.state, self.pending = {}, {}
+        self.updates_sent = 0
 
     def update(self, space_id, ai_status, confidence=1.0):
         """Call once per frame per space. Sends only after the new status persisted `stable` frames."""
@@ -32,6 +38,7 @@ class OccupancyPublisher:
         req = urllib.request.Request(f"{self.base}/occupancy", data=body, headers={"Content-Type": "application/json"}, method="POST")
         try:
             urllib.request.urlopen(req, timeout=3).read()
+            self.updates_sent += 1
             return True
         except Exception as e:
             print(f"[api] could not send update for space {space_id}: {e}")
