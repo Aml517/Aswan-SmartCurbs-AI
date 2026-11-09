@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from app.api.v1 import auth
 
 from app.api.v1 import occupancy
 from app.api.v1 import zones
@@ -15,3 +16,4 @@ v1_router.include_router(zones.router, tags=["Zones"])
 v1_router.include_router(availability.router, tags=["Availability"])
 v1_router.include_router(reservations.router, tags=["Reservations"])
 v1_router.include_router(analysis.router, tags=["AI Video Analysis"])
+v1_router.include_router(auth.router)

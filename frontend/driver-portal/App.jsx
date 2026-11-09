@@ -1,7 +1,8 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import ParkingZones from "./pages/ParkingZones";
 import ParkingDetails from "./pages/ParkingDetails";
 import Reservation from "./pages/Reservation";
@@ -9,13 +10,21 @@ import ParkingSession from "./pages/ParkingSession";
 import History from "./pages/History";
 
 export default function App() {
+  const location = useLocation();
+
+  // إخفاء الـ Navbar تماماً في صفحة التسجيل وصفحة الدخول
+  const hideNavbar = location.pathname === "/login" || location.pathname === "/register";
+
   return (
     <div className="page">
-      <Navbar />
+      {/* لن يظهر إلا بعد تسجيل الدخول وفي الصفحات الداخلية فقط */}
+      {!hideNavbar && <Navbar />}
+
       <Routes>
         {/* Login is the default route */}
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         <Route
           path="/parking-zones"
@@ -64,4 +73,3 @@ export default function App() {
     </div>
   );
 }
-
