@@ -1,0 +1,230 @@
+/* Container الكامل في منتصف الشاشة */
+.modern-reg-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top left, #0f2b2c, #061718 70%);
+  padding: 20px;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+/* الكارت العائم */
+.modern-reg-card {
+  width: 100%;
+  max-width: 1050px;
+  min-height: 620px;
+  background: linear-gradient(135deg, #0d3b3c 0%, #062324 100%);
+  border-radius: 28px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(20, 184, 166, 0.2);
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+/* الجانب الأيسر: العربية والتأثيرات */
+.reg-visual-side {
+  flex: 1.1;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1;
+}
+
+.reg-visual-header h2 {
+  color: #ffffff;
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.reg-visual-header p {
+  color: #5eead4;
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* رسمة العربية والمسار */
+.car-scene {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.car-svg {
+  width: 220px;
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.4));
+  animation: floatCar 4s ease-in-out infinite;
+  z-index: 2;
+}
+
+@keyframes floatCar {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(-1deg); }
+}
+
+/* الجانب الأيمن: الفورم والغيوم البيضاء */
+.reg-form-side {
+  flex: 1.2;
+  background: #ffffff;
+  padding: 40px 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  /* التأثير الانسيابي زي الصورة */
+  border-radius: 80px 0 0 80px;
+  box-shadow: -15px 0 30px rgba(0, 0, 0, 0.15);
+}
+
+.reg-form-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.reg-form-header h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f766e;
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.reg-form-header p {
+  color: #64748b;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* شبكة الحقول المريحة */
+.reg-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.reg-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.reg-input-group.full-width {
+  grid-column: span 2;
+}
+
+.reg-input-group label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #334155;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.reg-input-group input {
+  width: 100%;
+  padding: 10px 16px;
+  border-radius: 20px;
+  border: 1.5px solid #e2e8f0;
+  background-color: #f8fafc;
+  font-size: 0.88rem;
+  color: #0f172a;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.reg-input-group input:focus {
+  border-color: #14b8a6;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.15);
+}
+
+/* زرار التسجيل الدائري بنفس ألوان المشروع */
+.reg-submit-btn {
+  margin-top: 18px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 25px;
+  border: none;
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(15, 118, 110, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reg-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(15, 118, 110, 0.45);
+}
+
+.reg-submit-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* التنبيهات */
+.reg-error {
+  background-color: #fef2f2;
+  color: #dc2626;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.reg-success {
+  background-color: #ecfdf5;
+  color: #059669;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.reg-footer-link {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.reg-footer-link a {
+  color: #0f766e;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.reg-footer-link a:hover {
+  text-decoration: underline;
+}
+
+/* استجابة الشاشات الصغيرة */
+@media (max-width: 860px) {
+  .modern-reg-card {
+    flex-direction: column;
+  }
+  .reg-form-side {
+    border-radius: 30px 30px 0 0;
+    padding: 30px 24px;
+  }
+  .reg-input-group.full-width, .reg-input-group {
+    grid-column: span 2;
+  }
+}

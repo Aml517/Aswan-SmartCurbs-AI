@@ -1,14 +1,11 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Login.css";
+import { useNavigate, Link } from "react-router-dom";
+import "./Register.css"; // استخدام نفس الديزاين العصري الموحد
 
 export default function Login() {
   const navigate = useNavigate();
-  const [name, setName] = useState(() => localStorage.getItem("driverName") || "");
+
   const [email, setEmail] = useState(() => localStorage.getItem("driverEmail") || "");
-  const [phone, setPhone] = useState(() => localStorage.getItem("driverPhone") || "");
-  const [plate, setPlate] = useState(() => localStorage.getItem("vehiclePlate") || "");
-  const [vehicleModel, setVehicleModel] = useState(() => localStorage.getItem("vehicleModel") || "Car — Sedan");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -18,138 +15,97 @@ export default function Login() {
     setError("");
 
     if (!email.trim() || !password.trim()) {
-      setError("Enter both an email and a password to continue.");
+      setError("Please enter both email and password.");
       return;
     }
 
     setIsSubmitting(true);
 
     setTimeout(() => {
-      const derivedName = name.trim() || email.split("@")[0].replace(".", " ").replace(/\b\w/g, (c) => c.toUpperCase());
-      localStorage.setItem("driverName", derivedName);
+      // حفظ الجلسة والانتقال للمواقف
       localStorage.setItem("driverEmail", email.trim());
-      localStorage.setItem("driverPhone", phone.trim() || "+20 100 000 0000");
-      localStorage.setItem("vehiclePlate", plate.trim() || "ASW 1234");
-      localStorage.setItem("vehicleModel", vehicleModel.trim() || "Car — Sedan");
-
       setIsSubmitting(false);
       navigate("/parking-zones");
-    }, 300);
+    }, 400);
   }
 
   return (
-    <div className="login-page">
-      <div className="login-visual" aria-hidden="true">
-        <div className="login-visual-inner">
-          <span className="login-visual-eyebrow">Aswan SmartCurbs AI</span>
-          <h2>Every open spot in the city, spotted in real time.</h2>
-          <p>
-            Vehicle-detection cameras track occupancy across Aswan's curbside zones so you can
-            check availability and reserve a spot before you arrive.
-          </p>
-          <ul className="login-visual-stats">
-            <li>
-              <strong>3</strong>
-              <span>zones live</span>
-            </li>
-            <li>
-              <strong>120</strong>
-              <span>tracked spaces</span>
-            </li>
-            <li>
-              <strong>~2s</strong>
-              <span>detection refresh</span>
-            </li>
-          </ul>
+    <div className="modern-reg-wrapper">
+      <div className="modern-reg-card">
+        {/* الجانب الأيسر: رسمة العربية واللوجو بنفس ألوان المشروع */}
+        <div className="reg-visual-side">
+          <div className="reg-visual-header">
+            <h2>Aswan SmartCurbs</h2>
+            <p>Smart Curbside Parking & AI Occupancy</p>
+          </div>
+
+          <div className="car-scene">
+            <svg className="car-svg" viewBox="0 0 500 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="250" cy="110" r="120" fill="#14b8a6" fillOpacity="0.15" filter="blur(20px)" />
+              <path d="M70 140C90 140 105 110 140 100C190 85 280 85 340 105C380 115 410 125 440 135C455 140 460 155 450 165C430 175 100 175 70 165C55 160 55 140 70 140Z" fill="#14b8a6"/>
+              <path d="M145 105L195 65C215 50 310 50 345 68L390 105H145Z" fill="#0f766e"/>
+              <path d="M195 68C210 55 300 55 335 70L370 102H155L195 68Z" fill="#e0f2fe" fillOpacity="0.85"/>
+              <path d="M435 142L450 147L435 152" stroke="#fef08a" strokeWidth="4" strokeLinecap="round"/>
+              <line x1="75" y1="145" x2="60" y2="148" stroke="#ef4444" strokeWidth="6" strokeLinecap="round"/>
+              <circle cx="140" cy="165" r="32" fill="#0f172a" stroke="#94a3b8" strokeWidth="6"/>
+              <circle cx="140" cy="165" r="14" fill="#14b8a6"/>
+              <circle cx="370" cy="165" r="32" fill="#0f172a" stroke="#94a3b8" strokeWidth="6"/>
+              <circle cx="370" cy="165" r="14" fill="#14b8a6"/>
+              <path d="M30 165H10 M20 150H0 M15 180H2" stroke="#5eead4" strokeWidth="4" strokeLinecap="round" opacity="0.6"/>
+            </svg>
+          </div>
+
+          <div style={{ color: "#99f6e4", fontSize: "0.85rem" }}>
+            Every open spot in the city, spotted in real time.
+          </div>
         </div>
-      </div>
 
-      <div className="login-form-panel">
-        <form className="login-card surface" onSubmit={handleSubmit} noValidate>
-          <div className="login-card-header">
-            <h1>Driver Portal Sign In</h1>
-            <p>Enter your profile and vehicle details to sign in and reserve parking.</p>
+        {/* الجانب الأيمن: فورم تسجيل الدخول النظيف والمنحني */}
+        <div className="reg-form-side">
+          <div className="reg-form-header">
+            <h3>Driver Sign In</h3>
+            <p>Welcome back! Please enter your details.</p>
           </div>
 
-          <div className="field">
-            <label htmlFor="name">Full Name</label>
-            <input
-              id="name"
-              type="text"
-              placeholder="e.g. Test User One"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              autoComplete="name"
-            />
-          </div>
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="reg-form-grid">
+              <div className="reg-input-group full-width">
+                <label>Email Address</label>
+                <input
+                  type="email"
+                  placeholder="e.g. driver@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                  required
+                />
+              </div>
 
-          <div className="field">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="e.g. test1@example.com"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              autoComplete="email"
-            />
-          </div>
+              <div className="reg-input-group full-width">
+                <label>Password</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  required
+                />
+              </div>
+            </div>
 
-          <div className="field">
-            <label htmlFor="phone">Phone Number</label>
-            <input
-              id="phone"
-              type="tel"
-              placeholder="e.g. +20 111 111 1111"
-              value={phone}
-              onChange={(event) => setPhone(event.target.value)}
-              autoComplete="tel"
-            />
-          </div>
+            {error && <div className="reg-error">{error}</div>}
 
-          <div className="field">
-            <label htmlFor="plate">Vehicle License Plate</label>
-            <input
-              id="plate"
-              type="text"
-              placeholder="e.g. AAA 111"
-              value={plate}
-              onChange={(event) => setPlate(event.target.value)}
-              autoComplete="off"
-            />
-          </div>
+            <button type="submit" className="reg-submit-btn" disabled={isSubmitting}>
+              {isSubmitting ? "Signing In…" : "SIGN IN"}
+            </button>
 
-          <div className="field">
-            <label htmlFor="vehicleModel">Vehicle Type / Model</label>
-            <input
-              id="vehicleModel"
-              type="text"
-              placeholder="e.g. Car — Sedan"
-              value={vehicleModel}
-              onChange={(event) => setVehicleModel(event.target.value)}
-            />
-          </div>
-
-          <div className="field">
-            <label htmlFor="password">Password</label>
-            <input
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              autoComplete="current-password"
-            />
-          </div>
-
-          {error && <p className="field-error" role="alert">{error}</p>}
-
-          <button type="submit" className="btn btn-primary btn-block" disabled={isSubmitting}>
-            {isSubmitting ? "Signing in…" : "Sign in & Continue"}
-          </button>
-        </form>
+            <div className="reg-footer-link">
+              Don't have an account? <Link to="/register">Create Account</Link>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
 }
-
