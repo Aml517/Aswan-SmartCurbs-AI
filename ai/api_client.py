@@ -3,6 +3,7 @@ import json
 import urllib.request
 
 from common import CFG
+from contracts import VALID_STATUSES, validate_zone_payload
 
 
 class OccupancyPublisher:
@@ -17,6 +18,7 @@ class OccupancyPublisher:
         self.stable = int(thresholds.get("stable_frames", 3))
         self.state, self.pending = {}, {}
         self.updates_sent = 0
+        self.published = {}   # backend space_id -> last status sent through publish_zone()
 
     def update(self, space_id, ai_status, confidence=1.0):
         """Call once per frame per space. Sends only after the new status persisted `stable` frames."""
@@ -43,3 +45,34 @@ class OccupancyPublisher:
         except Exception as e:
             print(f"[api] could not send update for space {space_id}: {e}")
             return False
+
+    def publish_zone(self, payload, default_confidence=1.0):
+        """Send one agreed-format zone payload (see contracts.zone_payload) to the existing backend endpoint.
+
+        The backend contract (POST /api/v1/occupancy, one space per call) is unchanged: only spaces whose status
+        differs from the last one sent are posted. Returns the list of space ids that were posted successfully.
+        """
+        problems = validate_zone_payload(payload)
+        if problems:
+            raise ValueError("invalid zone payload: " + "; ".join(problems))
+        posted = []
+        for item in payload["occupancy"]:
+            sid, status = item["space_id"], item["status"]
+            if status not in VALID_STATUSES:
+                continue
+            if self.published.get(sid, "available") == status:
+                continue
+            conf = item.get("confidence")
+            body = json.dumps({"zone_id": payload["zone_id"], "space_id": sid, "status": status,
+                               "confidence": float(conf if conf is not None else default_confidence)}).encode()
+            req = urllib.request.Request(f"{self.base}/occupancy", data=body,
+                                         headers={"Content-Type": "application/json"}, method="POST")
+            try:
+                urllib.request.urlopen(req, timeout=3).read()
+            except Exception as e:
+                print(f"[api] could not publish space {sid}: {e}")
+                continue
+            self.published[sid] = status
+            self.updates_sent += 1
+            posted.append(sid)
+        return posted

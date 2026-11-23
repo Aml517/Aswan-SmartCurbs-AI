@@ -9,7 +9,7 @@ from typing import Any
 import cv2
 import numpy as np
 
-from common import CFG, path, point_in_polygon, save_json
+from common import CFG, normalize_polygon, path, point_in_polygon, save_json
 from track import INPUT_VIDEO, load_tracks, process_video
 
 PARKING_SPACES: dict = {int(k): [tuple(p) for p in v] for k, v in CFG.get("parking_spaces", {}).items()}
@@ -23,6 +23,7 @@ if not PARKING_SPACES:
                     PARKING_SPACES[int(_item["id"])] = [tuple(_p) for _p in _item["points"]]
         except Exception:
             pass
+PARKING_SPACES = {sid: normalize_polygon(pts, f"parking space {sid}") for sid, pts in PARKING_SPACES.items()}
 OCCUPANCY_OUTPUT_VIDEO = path("outputs/parking_occupancy_output.mp4")
 OCCUPANCY_JSON = path("outputs/occupancy_results.json")
 
