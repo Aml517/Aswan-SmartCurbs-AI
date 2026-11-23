@@ -4,6 +4,8 @@ Every path is resolved from the location of this file, so scripts work from any 
 Layout:  ai/vehicle_detection/{src, data, outputs, notebooks, config.json}
 """
 import json
+import logging
+import math
 from pathlib import Path
 
 import cv2
@@ -115,3 +117,41 @@ def to_ground(H, point):
         return (float(v[0] / v[2]), float(v[1] / v[2]))
     except Exception:
         return None
+
+
+# ------------------------------------------------------ polygon validation
+def _segments_cross(p1, p2, p3, p4):
+    """True when segment p1-p2 properly crosses segment p3-p4."""
+    return _ccw(p1, p3, p4) != _ccw(p2, p3, p4) and _ccw(p1, p2, p3) != _ccw(p1, p2, p4)
+
+
+def polygon_is_simple(points):
+    """False when the polygon edges cross each other (a "bow-tie"), which breaks point-in-polygon tests."""
+    n = len(points)
+    if n < 3:
+        return False
+    for i in range(n):
+        for j in range(i + 1, n):
+            if j == i + 1 or (i == 0 and j == n - 1):   # adjacent edges share a vertex
+                continue
+            if _segments_cross(points[i], points[(i + 1) % n], points[j], points[(j + 1) % n]):
+                return False
+    return True
+
+
+def normalize_polygon(points, label="polygon"):
+    """Return the polygon as a list of tuples; re-order the points around the centroid if the edges cross.
+
+    Points clicked in the wrong order (see select_parking_spaces.py) give a self-intersecting shape.
+    Sorting by angle around the centroid gives the intended simple polygon for convex bays.
+    """
+    pts = [tuple(p) for p in points]
+    if polygon_is_simple(pts):
+        return pts
+    cx = sum(p[0] for p in pts) / len(pts)
+    cy = sum(p[1] for p in pts) / len(pts)
+    fixed = sorted(pts, key=lambda p: math.atan2(p[1] - cy, p[0] - cx))
+    if polygon_is_simple(fixed):
+        logging.getLogger(__name__).warning("%s had crossing edges; points were re-ordered automatically.", label)
+        return fixed
+    raise ValueError(f"{label} is not a valid simple polygon: {pts}")

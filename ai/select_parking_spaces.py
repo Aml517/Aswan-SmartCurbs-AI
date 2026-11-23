@@ -1,6 +1,7 @@
 import cv2
 import json
 import numpy as np
+from common import normalize_polygon
 
 IMAGE_PATH = "parking_frame.jpg"
 OUTPUT_FILE = "parking_spaces.json"
@@ -48,7 +49,7 @@ while True:
         if len(points) == 4:
             parking_spaces.append({
                 "id": space_id,
-                "points": points.copy()
+                "points": [list(p) for p in normalize_polygon(points, f"space {space_id}")]
             })
             print(f"Space {space_id} saved.")
             space_id += 1
